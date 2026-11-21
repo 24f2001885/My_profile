@@ -16,31 +16,41 @@ jobs:
       - name: Configure SSH Key
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.AWS_EC2_SSH_KEY }}
+          ssh-private-key: ${{ secrets.AWS_SSH_KEY || secrets.AWS_EC2_SSH_KEY }}
 
-      - name: Deploy Static Files to VPS Webroot
+      - name: Deploy Static Files to VPS Webroot & Docker Engine
         run: |
-          # 1. Ensure target webroot exists with correct ownership
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} \
-            "sudo mkdir -p /var/www/portfolio && sudo chown -R ${{ secrets.AWS_EC2_USER }}:${{ secrets.AWS_EC2_USER }} /var/www/portfolio"
+          TARGET_HOST="${{ secrets.AWS_HOST || secrets.AWS_EC2_HOST }}"
+          TARGET_USER="${{ secrets.AWS_USER || secrets.AWS_EC2_USER || 'ubuntu' }}"
+          TARGET_PORT="${{ secrets.AWS_SSH_PORT || 22 }}"
 
-          # 2. Rsync static assets to EC2 webroot (excluding repository metadata and plan docs)
+          echo "Initiating deployment to $TARGET_USER@$TARGET_HOST:$TARGET_PORT..."
+
+          # 1. Ensure target webroot exists with correct ownership
+          ssh -o StrictHostKeyChecking=no -p $TARGET_PORT $TARGET_USER@$TARGET_HOST \
+            "sudo mkdir -p /var/www/portfolio && sudo chown -R $TARGET_USER:$TARGET_USER /var/www/portfolio"
+
+          # 2. Rsync static assets to EC2 webroot (excluding local metadata and plan docs)
           rsync -avz --delete \
             --exclude '.git*' \
             --exclude '.github*' \
             --exclude 'plan*' \
-            -e "ssh -o StrictHostKeyChecking=no -p ${{ secrets.AWS_SSH_PORT || 22 }}" \
-            ./ ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:/var/www/portfolio/
+            -e "ssh -o StrictHostKeyChecking=no -p $TARGET_PORT" \
+            ./ $TARGET_USER@$TARGET_HOST:/var/www/portfolio/
 
           # 3. Securely generate production .htpasswd for Nginx if secrets are defined
           if [ -n "${{ secrets.DASHBOARD_PASSWORD }}" ]; then
             DASH_USER="${{ secrets.DASHBOARD_USERNAME || 'admin' }}"
-            ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} \
+            ssh -o StrictHostKeyChecking=no -p $TARGET_PORT $TARGET_USER@$TARGET_HOST \
               "echo '${{ secrets.DASHBOARD_PASSWORD }}' | sudo htpasswd -i -c /etc/nginx/.htpasswd $DASH_USER && sudo chmod 640 /etc/nginx/.htpasswd && sudo chown root:www-data /etc/nginx/.htpasswd"
           fi
 
-          # 4. Reload Host Nginx with zero downtime
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} \
-            "sudo systemctl reload nginx"
+          # 4. Reload Host Nginx or Docker Container with zero downtime
+          ssh -o StrictHostKeyChecking=no -p $TARGET_PORT $TARGET_USER@$TARGET_HOST \
+            "if command -v docker >/dev/null 2>&1 && [ -f /var/www/portfolio/docker-compose.yml ]; then
+               cd /var/www/portfolio && docker compose up -d --build
+             elif command -v nginx >/dev/null 2>&1; then
+               sudo systemctl reload nginx
+             fi"
           
           echo "🚀 Deployment successfully completed! Site live at https://abhishek4312.info"

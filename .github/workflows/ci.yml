@@ -52,6 +52,7 @@ jobs:
               'assets/docs/ABHISHEKPATHAK_CV.pdf',
               'assets/img/profile.jpg',
               'Dockerfile',
+              'docker-compose.yml',
               'nginx.conf'
           ]
           missing = [f for f in required_files if not os.path.exists(f)]
