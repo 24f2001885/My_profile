@@ -19,7 +19,7 @@
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230C1224' stroke='%23FFB020' stroke-width='6'/%3E%3Ctext x='50' y='63' font-family='sans-serif' font-size='42' font-weight='900' fill='%23FFB020' text-anchor='middle'%3EA.%3C/text%3E%3Ccircle cx='76' cy='32' r='8' fill='%233DDC97'/%3E%3C/svg%3E" />
 
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/style.css?v=2026.6" />
 
   <!-- Canvas Confetti Library for sudo hire-me & contact celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
@@ -127,6 +127,98 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
   </div>
 
   <!-- =========================================================================
+       4b. Keyboard Shortcuts Cheatsheet Modal (?)
+       ========================================================================= -->
+  <div class="modal-overlay" id="shortcuts-modal" aria-hidden="true" role="dialog">
+    <div class="case-study-box" style="max-width: 540px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>⌨️ Developer Keyboard Shortcuts</span>
+        </div>
+        <button class="case-study-close" id="shortcuts-close-btn" aria-label="Close shortcuts modal" style="position: static;">✕</button>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut-item"><span>Next Section</span> <kbd>j</kbd></div>
+        <div class="shortcut-item"><span>Prev Section</span> <kbd>k</kbd></div>
+        <div class="shortcut-item"><span>Command Palette</span> <kbd>Ctrl+K</kbd></div>
+        <div class="shortcut-item"><span>Dev Terminal</span> <kbd>`</kbd></div>
+        <div class="shortcut-item"><span>Cycle Theme</span> <kbd>t</kbd></div>
+        <div class="shortcut-item"><span>Recruiter Scan</span> <kbd>r</kbd></div>
+        <div class="shortcut-item"><span>Toggle Audio FX</span> <kbd>m</kbd></div>
+        <div class="shortcut-item"><span>Shortcuts Help</span> <kbd>?</kbd></div>
+        <div class="shortcut-item"><span>Close Modals</span> <kbd>Esc</kbd></div>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); margin-top: 1.25rem; border-top: 1px solid var(--border-glass); padding-top: 0.75rem; text-align: center;">
+        Protip: Navigate like in Vim with <kbd>j</kbd> and <kbd>k</kbd>! Press <kbd>r</kbd> for Recruiter Quick-Scan!
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       4c. Recruiter 30-Second Quick-Scan Modal
+       ========================================================================= -->
+  <div class="modal-overlay" id="recruiter-modal" aria-hidden="true" role="dialog">
+    <div class="recruiter-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+            ⚡ Quick-Scan Decision Matrix // 30-Second Summary
+          </div>
+          <h2 style="font-family: var(--font-display); font-size: 1.6rem; color: var(--text-primary); margin: 0.25rem 0 0;">
+            Abhishek Pathak
+          </h2>
+        </div>
+        <button class="case-study-close" id="recruiter-close-btn" aria-label="Close Recruiter Modal" style="position: static;">✕</button>
+      </div>
+
+      <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+        Dual-degree software engineer pursuing <strong>BS in Data Science & Applications at IIT Madras</strong> and <strong>B.Tech in CSE (Honours in AI) at CSVTU Bhilai</strong>. Specializes in multi-tenant SaaS architecture, backend microservices, and Dockerized Linux deployments on AWS EC2.
+      </p>
+
+      <div class="recruiter-grid">
+        <div class="recruiter-stat-card">
+          <div class="recruiter-stat-label">Target Roles</div>
+          <div class="recruiter-stat-val">Full-Stack / Backend / Cloud</div>
+        </div>
+        <div class="recruiter-stat-card">
+          <div class="recruiter-stat-label">Academic Identity</div>
+          <div class="recruiter-stat-val">IIT Madras + CSVTU</div>
+        </div>
+        <div class="recruiter-stat-card">
+          <div class="recruiter-stat-label">Primary Stack</div>
+          <div class="recruiter-stat-val">Python, Flask, Postgres, Docker</div>
+        </div>
+        <div class="recruiter-stat-card">
+          <div class="recruiter-stat-label">Cloud VPS</div>
+          <div class="recruiter-stat-val">AWS EC2 &bull; Automated CI/CD</div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1.25rem; margin-top: 1rem;">
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--accent-green); margin-bottom: 0.5rem;">
+          🚀 Flagship Engineering Proof: Trekking Management Application (TMA)
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+          Engineered and launched an enterprise multi-tenant booking & expedition platform with dynamic sub-domain routing, PostgreSQL schema isolation per organization, Gunicorn/Nginx reverse proxy, and zero-leakage security on a constrained 1 GB AWS EC2 instance.
+        </p>
+      </div>
+
+      <div class="recruiter-actions-row">
+        <a href="assets/docs/ABHISHEKPATHAK_CV.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1; justify-content: center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Download Verified CV (PDF)</span>
+        </a>
+        <button type="button" class="btn btn-secondary copy-trigger" data-copy="abhishekpathak4312@gmail.com" style="flex: 1; justify-content: center;">
+          <span>📋 Copy Direct Email</span>
+        </button>
+        <a href="#contact" class="btn btn-secondary" id="recruiter-contact-link" style="justify-content: center;">
+          <span>💬 Send Message</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
        5. Floating Dock Navigation
        ========================================================================= -->
   <nav class="floating-dock-nav" id="dock-nav" aria-label="Main Floating Navigation">
@@ -159,6 +251,14 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
 
       <button class="dock-btn" id="dock-cmd-btn" title="Open Command Palette (Ctrl+K)">
         <span class="cmd-k-badge">⌘K</span>
+      </button>
+
+      <button class="dock-btn" id="dock-shortcuts-btn" title="Keyboard Shortcuts (?)">
+        <span style="font-family:var(--font-mono); font-weight:700; font-size:0.85rem;">?</span>
+      </button>
+
+      <button class="dock-btn" id="dock-recruiter-btn" title="Recruiter 30-Second Quick-Scan (r)">
+        <span style="font-family:var(--font-mono); font-weight:700; font-size:0.85rem; color:var(--accent-primary);">⚡</span>
       </button>
 
       <a href="assets/docs/ABHISHEKPATHAK_CV.pdf" target="_blank" rel="noopener noreferrer" class="dock-btn dock-btn-highlight" title="Download Verified Resume">
@@ -197,6 +297,13 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
           </p>
 
           <div class="hero-cta-group">
+            <a href="#projects" class="btn btn-primary magnetic-btn">
+              <span>🚀 Explore Live Projects</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <button type="button" class="btn btn-secondary magnetic-btn" id="hero-recruiter-btn" style="border-color: rgba(255, 176, 32, 0.4); color: var(--accent-primary);">
+              <span>⚡ Recruiter 30s View</span>
+            </button>
             <a href="#projects" class="btn btn-primary magnetic-btn">
               <span>🚀 Explore Live Projects</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -384,6 +491,65 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
       <h2 class="section-heading">Featured Case Studies</h2>
       <p class="section-desc">Each application is deployed in production with real database persistence, automated test suites, and zero demo credentials exposed.</p>
 
+      <!-- Interactive Architecture Telemetry Flow Diagram -->
+      <div class="arch-flow-section" id="arch-flow-section">
+        <div class="arch-flow-header">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+              🗺️ Living Architecture // Production Request Pipeline
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.25rem; color: var(--text-primary); margin: 0.2rem 0 0;">
+              End-to-End Infrastructure Flow
+            </h3>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono); background: rgba(255,255,255,0.03); padding: 0.35rem 0.75rem; border-radius: 6px; border: 1px solid var(--border-glass);">
+            💡 Click any node to inspect live SLA &amp; configurations
+          </div>
+        </div>
+
+        <div class="arch-nodes-container" id="arch-nodes-list">
+          <div class="arch-node-item active" data-node="client">
+            <div class="arch-node-icon">🌐</div>
+            <div class="arch-node-title">Client Browser</div>
+            <div class="arch-node-sub">HTTP/2 &bull; TLS 1.3</div>
+          </div>
+          <div class="arch-flow-arrow">→</div>
+          <div class="arch-node-item" data-node="cloudflare">
+            <div class="arch-node-icon">🛡️</div>
+            <div class="arch-node-title">Cloudflare Edge</div>
+            <div class="arch-node-sub">WAF &amp; Global CDN</div>
+          </div>
+          <div class="arch-flow-arrow">→</div>
+          <div class="arch-node-item" data-node="aws">
+            <div class="arch-node-icon">☁️</div>
+            <div class="arch-node-title">AWS EC2 VPS</div>
+            <div class="arch-node-sub">Ubuntu 24.04 LTS</div>
+          </div>
+          <div class="arch-flow-arrow">→</div>
+          <div class="arch-node-item" data-node="nginx">
+            <div class="arch-node-icon">⚡</div>
+            <div class="arch-node-title">Alpine Nginx</div>
+            <div class="arch-node-sub">Reverse Proxy :80/:443</div>
+          </div>
+          <div class="arch-flow-arrow">→</div>
+          <div class="arch-node-item" data-node="gunicorn">
+            <div class="arch-node-icon">🐍</div>
+            <div class="arch-node-title">Gunicorn / Flask</div>
+            <div class="arch-node-sub">WSGI Gevent :8000</div>
+          </div>
+          <div class="arch-flow-arrow">→</div>
+          <div class="arch-node-item" data-node="postgres">
+            <div class="arch-node-icon">🐘</div>
+            <div class="arch-node-title">PostgreSQL 16</div>
+            <div class="arch-node-sub">Multi-Tenant Schemas</div>
+          </div>
+        </div>
+
+        <div class="arch-inspector-card" id="arch-inspector-card">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
       <div class="sticky-stack-wrap" id="projects-container">
         <!-- Rendered dynamically via main.js from portfolio.json with 16:10 mockups & self-drawing SVGs -->
       </div>
@@ -482,6 +648,81 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
           </div>
         </div>
 
+        <!-- Live Docker Containers Matrix -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+          <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-glass); border-radius: 10px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <span class="dock-status-dot"></span> tma-tenant-proxy
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Alpine Nginx &middot; Port 80/443 &middot; Up 180d</div>
+            </div>
+            <span class="badge" style="color: var(--accent-green); border-color: rgba(61,220,151,0.3);">HEALTHY</span>
+          </div>
+
+          <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-glass); border-radius: 10px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <span class="dock-status-dot"></span> emp-eval-engine
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Flask / Gunicorn &middot; Mem: 142MB / 256MB</div>
+            </div>
+            <span class="badge" style="color: var(--accent-green); border-color: rgba(61,220,151,0.3);">HEALTHY</span>
+          </div>
+
+          <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-glass); border-radius: 10px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <span class="dock-status-dot"></span> postgres-multi-tenant
+              </div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">PostgreSQL 16 &middot; Conn: 12 &middot; 4GB Swap</div>
+            </div>
+            <span class="badge" style="color: var(--accent-green); border-color: rgba(61,220,151,0.3);">HEALTHY</span>
+          </div>
+        </div>
+
+        <!-- Interactive API Playground -->
+        <div class="api-playground-box" id="api-playground">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">
+              📡 Developer API Explorer & Sandbox
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
+              Endpoint Host: https://abhishek4312.info
+            </div>
+          </div>
+          <div class="api-bar">
+            <span class="method-badge">GET</span>
+            <select class="api-url-select" id="api-endpoint-select" aria-label="Select API Endpoint">
+              <option value="/api/v1/profile">/api/v1/profile — Developer & Dual Degree Identity</option>
+              <option value="/api/v1/projects">/api/v1/projects — Deployed Production Applications</option>
+              <option value="/api/v1/telemetry">/api/v1/telemetry — AWS EC2 Living System Metrics</option>
+              <option value="/api/v1/skills">/api/v1/skills — Backend & DevOps Stack</option>
+            </select>
+            <button type="button" class="btn btn-primary" id="btn-api-send" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">
+              <span>Send Request ⚡</span>
+            </button>
+            <span class="api-status-badge" id="api-status-pill">200 OK &middot; 18ms</span>
+          </div>
+          <pre class="api-response-pre" id="api-response-pre"></pre>
+        </div>
+
+        <!-- Git Commit Log Widget -->
+        <div class="git-changelog-box" id="git-changelog-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+              <span>🐙 Verified Git Commit Stream</span>
+              <span class="badge" style="font-size: 0.7rem; color: var(--accent-cyan); border-color: rgba(34, 211, 238, 0.3);">branch: main</span>
+            </div>
+            <a href="https://github.com/24f2001885/My_profile/commits/main" target="_blank" rel="noopener noreferrer" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-primary); text-decoration: none;">
+              View on GitHub &rarr;
+            </a>
+          </div>
+          <div id="git-commits-stream">
+            <!-- Rendered dynamically via JavaScript -->
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -505,7 +746,174 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
         <!-- Injected via JavaScript from portfolio.json -->
       </div>
 
+      <!-- Interactive SQL Query Sandbox -->
+      <div class="sql-sandbox-box" id="sql-sandbox">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            <span>💾 Interactive SQL Query Sandbox</span>
+            <span class="badge" style="font-size: 0.7rem; color: var(--accent-primary);">PostgreSQL 16 Engine</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
+            Ctrl + Enter to Execute
+          </span>
+        </div>
+
+        <div class="sql-presets-row">
+          <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">Query Presets:</span>
+          <button type="button" class="sql-preset-btn active" data-preset="1">TMA Expeditions / Tenant</button>
+          <button type="button" class="sql-preset-btn" data-preset="2">LMS High-Scorers (&gt;80%)</button>
+          <button type="button" class="sql-preset-btn" data-preset="3">Docker Containers &amp; Memory</button>
+        </div>
+
+        <div class="sql-input-row">
+          <textarea class="sql-query-input" id="sql-query-input" spellcheck="false" rows="2">SELECT tenant_id, count(*) AS total_expeditions, avg(difficulty_level) AS avg_difficulty FROM tma_expeditions GROUP BY tenant_id ORDER BY total_expeditions DESC;</textarea>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <button type="button" class="btn btn-primary" id="btn-sql-run" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
+            <span>▶ Execute Query</span>
+          </button>
+          <span id="sql-query-status" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-green);">Query OK: 3 rows returned in 1.4ms</span>
+        </div>
+
+        <div class="sql-result-table-wrap">
+          <table class="sql-result-table" id="sql-result-table">
+            <!-- Rendered dynamically -->
+          </table>
+        </div>
+      </div>
+
       <!-- Two-Row Opposing Tech Logo Marquees -->
+      <!-- Engineering Tech Radar Section -->
+      <div class="tech-radar-wrap">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+              📡 Tech Radar // Architectural Evaluation
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); margin: 0.2rem 0 0;">
+              Engineering Radar &amp; Tooling Lifecycle
+            </h3>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);">
+            Updated Q4 2026 // Production Verified
+          </div>
+        </div>
+
+        <div class="tech-radar-grid">
+          <!-- ADOPT -->
+          <div class="radar-tier-card" style="border-top: 3px solid var(--accent-green);">
+            <div class="radar-tier-header">
+              <div class="radar-tier-title" style="color: var(--accent-green);">
+                <span>🟢 ADOPT</span>
+              </div>
+              <span class="badge" style="color: var(--accent-green); border-color: rgba(61,220,151,0.3);">Daily Driver</span>
+            </div>
+            <div class="radar-items-list">
+              <div class="radar-item"><span>Python 3.12 (typing, asyncio)</span> <span style="color:var(--text-muted);">Core Backend</span></div>
+              <div class="radar-item"><span>PostgreSQL 16 (Schemas, JSONB)</span> <span style="color:var(--text-muted);">Primary RDBMS</span></div>
+              <div class="radar-item"><span>Docker &amp; Compose</span> <span style="color:var(--text-muted);">Containerization</span></div>
+              <div class="radar-item"><span>Alpine Nginx &amp; SSL/TLS</span> <span style="color:var(--text-muted);">Reverse Proxy</span></div>
+              <div class="radar-item"><span>Linux (Ubuntu Server)</span> <span style="color:var(--text-muted);">OS / Shell</span></div>
+              <div class="radar-item"><span>GitHub Actions CI/CD</span> <span style="color:var(--text-muted);">Automation</span></div>
+            </div>
+          </div>
+
+          <!-- TRIAL -->
+          <div class="radar-tier-card" style="border-top: 3px solid var(--accent-cyan);">
+            <div class="radar-tier-header">
+              <div class="radar-tier-title" style="color: var(--accent-cyan);">
+                <span>🔵 TRIAL</span>
+              </div>
+              <span class="badge" style="color: var(--accent-cyan); border-color: rgba(34,211,238,0.3);">Evaluating</span>
+            </div>
+            <div class="radar-items-list">
+              <div class="radar-item"><span>FastAPI &amp; Pydantic v2</span> <span style="color:var(--text-muted);">Async REST</span></div>
+              <div class="radar-item"><span>Redis (Streams &amp; Caching)</span> <span style="color:var(--text-muted);">In-Memory</span></div>
+              <div class="radar-item"><span>DuckDB &amp; Polars</span> <span style="color:var(--text-muted);">Embedded OLAP</span></div>
+              <div class="radar-item"><span>Terraform &amp; AWS CDK</span> <span style="color:var(--text-muted);">IaC Provisioning</span></div>
+              <div class="radar-item"><span>Prometheus &amp; Grafana</span> <span style="color:var(--text-muted);">Observability</span></div>
+            </div>
+          </div>
+
+          <!-- ASSESS -->
+          <div class="radar-tier-card" style="border-top: 3px solid var(--accent-primary);">
+            <div class="radar-tier-header">
+              <div class="radar-tier-title" style="color: var(--accent-primary);">
+                <span>🟡 ASSESS</span>
+              </div>
+              <span class="badge" style="color: var(--accent-primary); border-color: rgba(255,176,32,0.3);">Research</span>
+            </div>
+            <div class="radar-items-list">
+              <div class="radar-item"><span>Rust (tokio, actix-web)</span> <span style="color:var(--text-muted);">Systems Code</span></div>
+              <div class="radar-item"><span>Kubernetes (k3s / minikube)</span> <span style="color:var(--text-muted);">Orchestration</span></div>
+              <div class="radar-item"><span>Apache Kafka</span> <span style="color:var(--text-muted);">Event Streaming</span></div>
+              <div class="radar-item"><span>eBPF &amp; Cilium</span> <span style="color:var(--text-muted);">Kernel Networking</span></div>
+              <div class="radar-item"><span>Vector DBs (pgvector)</span> <span style="color:var(--text-muted);">Semantic Search</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distributed Systems Bookshelf -->
+      <div class="bookshelf-wrap">
+        <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 0.85rem; margin-bottom: 1.25rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+            📚 Engineering Intellect // Foundational Reading
+          </div>
+          <h3 style="font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); margin: 0.2rem 0 0;">
+            Systems Bookshelf &amp; Architecture Notes
+          </h3>
+        </div>
+
+        <div class="bookshelf-grid">
+          <div class="book-card">
+            <div>
+              <div class="book-title">Designing Data-Intensive Applications</div>
+              <div class="book-author">Martin Kleppmann</div>
+              <p class="book-note">
+                Deep architectural takeaways on reliable consensus (Raft/Paxos), B-Tree vs LSM storage engines, partitioning keys, and handling unreliability in distributed networks without cascading failures.
+              </p>
+            </div>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <span class="badge">Replication</span>
+              <span class="badge">SSTables</span>
+              <span class="badge">Linearizability</span>
+            </div>
+          </div>
+
+          <div class="book-card">
+            <div>
+              <div class="book-title">System Design Interview (Vol 1 &amp; 2)</div>
+              <div class="book-author">Alex Xu</div>
+              <p class="book-note">
+                Practical blueprints for rate limiters (leaky bucket vs token bucket), consistent hashing for distributed caches, unique ID generators (Snowflake), and scaling from 1 to 10M users.
+              </p>
+            </div>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <span class="badge">Consistent Hashing</span>
+              <span class="badge">Rate Limiting</span>
+              <span class="badge">Microservices</span>
+            </div>
+          </div>
+
+          <div class="book-card">
+            <div>
+              <div class="book-title">Database Internals</div>
+              <div class="book-author">Alex Petrov</div>
+              <p class="book-note">
+                Comprehensive study of database engines: write-ahead logging (WAL), concurrency control (MVCC), buffer pool management, and distributed transaction 2-phase commit (2PC).
+              </p>
+            </div>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <span class="badge">WAL Logs</span>
+              <span class="badge">MVCC</span>
+              <span class="badge">Buffer Pools</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="skills-marquees-section">
         <div class="skills-marquee-row marquee-left">
           <span class="marquee-pill">🐍 Python 3.12</span>
@@ -729,6 +1137,6 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
   </footer>
 
   <!-- Modular JavaScript Engine -->
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/main.js?v=2026.6"></script>
 </body>
 </html>
