@@ -1,0 +1,190 @@
+{
+  "profile": {
+    "name": "Abhishek Pathak",
+    "titles": [
+      "Full-Stack & Backend Engineer",
+      "Dual-Degree: IIT Madras & CSVTU Bhilai",
+      "Cloud & DevOps Enthusiast"
+    ],
+    "tagline": "Engineering robust backend systems, multi-tenant cloud architectures, and data-driven web applications.",
+    "bio": [
+      "I am an engineer pursuing a dual-degree path: BS in Data Science & Applications at the Indian Institute of Technology, Madras (IIT Madras) and B.Tech in Computer Science & Engineering (Honours in Artificial Intelligence) at CSVTU Bhilai.",
+      "My core passion lies in backend systems architecture, RESTful API design, multi-tenant cloud platforms, and DevOps automation. I build clean, high-performance software backed by automated CI/CD pipelines, Docker containerization, and AWS cloud hosting."
+    ],
+    "location": "Lucknow / Kushinagar, UP, India",
+    "email": "abhishekpathak4312@gmail.com",
+    "phone": "+91 6394843151",
+    "github": "https://github.com/raj4312",
+    "linkedin": "https://www.linkedin.com/in/abhishek-pathak-342a03308/",
+    "avatarUrl": "assets/img/profile.jpg",
+    "resumeUrl": "assets/docs/ABHISHEKPATHAK_CV.pdf"
+  },
+  "education": [
+    {
+      "degree": "BS in Data Science and Applications",
+      "institution": "Indian Institute of Technology, Madras (IIT Madras)",
+      "period": "2024 – 2028",
+      "grade": "CGPA: 7.8 (Ongoing)",
+      "badge": "Premier Institute",
+      "description": "Rigorous foundation in statistical modeling, machine learning, algorithm design, Python programming, database management, and large-scale data analysis.",
+      "highlights": [
+        "Data structures, algorithms, and application programming",
+        "Statistical computing and machine learning foundations",
+        "Applied database systems and data engineering workflows"
+      ]
+    },
+    {
+      "degree": "Bachelor of Technology in Computer Science & Engineering",
+      "specialization": "Honours – Artificial Intelligence Specialization",
+      "institution": "Chhattisgarh Swami Vivekanand Technical University, Bhilai (CSVTU)",
+      "period": "2025 – 2029",
+      "grade": "Undergraduate Track",
+      "badge": "Engineering Degree",
+      "description": "Comprehensive engineering curriculum covering operating systems, computer networks, system design, software engineering methodologies, and artificial intelligence.",
+      "highlights": [
+        "Operating systems, computer network protocols, and distributed systems",
+        "Software engineering lifecycle, OOP, and relational database systems",
+        "AI algorithms, optimization techniques, and intelligent systems"
+      ]
+    },
+    {
+      "degree": "Senior Secondary (Class XII) & Secondary (Class X)",
+      "institution": "St. Therese's School, Padrauna, Kushinagar",
+      "period": "2020 – 2024",
+      "grade": "Class XII: 87% | Class X: 89%",
+      "badge": "Academic Excellence",
+      "description": "Strong scientific and mathematical foundation in PCM stream (Physics, Chemistry, Mathematics).",
+      "highlights": [
+        "Senior Secondary (Class XII, Mathematics Stream): 87%",
+        "Secondary School Certificate (Class X): 89%"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "tma",
+      "title": "Trekking Management Application (TMA)",
+      "category": "Full-Stack & Cloud",
+      "featured": true,
+      "tagline": "Multi-tenant SaaS expedition platform with database isolation and automated Pytest CI suite.",
+      "description": "A full-stack, enterprise-grade trekking club management platform engineered with database schema isolation for multiple independent tenants. Features role-based access control, participant slot reservations, expedition route tracking, and low-memory container orchestration.",
+      "techStack": ["Python", "Flask", "PostgreSQL", "Docker", "Nginx", "Pytest"],
+      "architectureHighlights": [
+        "Multi-Tenant Architecture with tenant schema isolation (Tenant 0 & Tenant 1)",
+        "Automated Pytest test suite with code coverage thresholds",
+        "Dockerized PostgreSQL persistence with low-memory resource ceilings",
+        "Zero-downtime deployment through GitHub Actions CD"
+      ],
+      "liveUrls": [
+        { "label": "Tenant 0 (Himalayas Club)", "url": "https://tma.tenant0.abhishek4312.info" },
+        { "label": "Tenant 1 (Western Ghats Club)", "url": "https://tma.tenant1.abhishek4312.info" }
+      ],
+      "githubUrl": "https://github.com/raj4312/tma",
+      "image": "assets/img/tma-preview.jpg"
+    },
+    {
+      "id": "lms",
+      "title": "Examination Management Portal (LMS / EMP)",
+      "category": "Backend & Analytics",
+      "featured": true,
+      "tagline": "Role-based academic evaluation portal with interactive Chart.js analytics and proctored examination engine.",
+      "description": "A robust examination and academic assessment portal with role-based access control (Admin, Examiner, Student). Supports automated viva scheduling, timed proctored MCQs, instant grading logic, and responsive score distribution analytics.",
+      "techStack": ["Python", "Flask", "Gunicorn", "SQLite/PostgreSQL", "Chart.js", "Docker"],
+      "architectureHighlights": [
+        "Strict Role-Based Access Control (Admin, Examiner, Student)",
+        "Interactive Chart.js performance telemetry and student distribution graphs",
+        "Automated viva examination scheduling engine",
+        "Low-memory Gunicorn WSGI configuration (-w 1 --threads 2)"
+      ],
+      "liveUrls": [
+        { "label": "Live LMS Portal", "url": "https://lms.abhishek4312.info" }
+      ],
+      "githubUrl": "https://github.com/raj4312/lms",
+      "image": "assets/img/lms-preview.jpg"
+    },
+    {
+      "id": "infra",
+      "title": "3-Project CI/CD & AWS Student EC2 Cloud Infrastructure",
+      "category": "DevOps & Cloud",
+      "featured": true,
+      "tagline": "Production cloud hosting on a 1 GB RAM AWS EC2 instance with Nginx reverse proxy and Let's Encrypt SSL.",
+      "description": "Engineered a low-footprint cloud infrastructure hosting 3 full-stack applications, reverse proxy, and SSL on a constrained 1 GB RAM EC2 instance. Features automated 4 GB swap allocation, container memory ceilings, Certbot SSL automation, and GitHub Actions continuous deployment.",
+      "techStack": ["AWS EC2", "Nginx", "Docker Compose", "Let's Encrypt SSL", "GitHub Actions", "Linux/Bash"],
+      "architectureHighlights": [
+        "Configured 4 GB swap space and low swappiness (vm.swappiness=10) to eliminate OOM kills",
+        "Host Nginx reverse proxy with automated SSL certificate issuance for all subdomains",
+        "Automated push-to-deploy GitOps pipeline via SSH and rsync",
+        "Zero-downtime container rolling restart strategy"
+      ],
+      "liveUrls": [
+        { "label": "Live Portfolio Domain", "url": "https://abhishek4312.info" }
+      ],
+      "githubUrl": "https://github.com/raj4312/portfolio",
+      "image": "assets/img/infra-preview.jpg"
+    }
+  ],
+  "skills": {
+    "languagesAndFrameworks": [
+      "Python",
+      "Flask",
+      "JavaScript (ES6+)",
+      "SQL (PostgreSQL, SQLite)",
+      "HTML5",
+      "CSS3 / Modern CSS"
+    ],
+    "backendAndCloud": [
+      "Docker & Docker Compose",
+      "AWS EC2 VPS",
+      "Nginx Reverse Proxy",
+      "GitHub Actions CI/CD",
+      "Gunicorn WSGI",
+      "RESTful APIs",
+      "Linux / Bash Scripting"
+    ],
+    "toolsAndData": [
+      "Git & GitHub",
+      "VS Code",
+      "Postman",
+      "Data Cleaning & Analysis",
+      "Chart.js",
+      "KaTeX"
+    ]
+  },
+  "achievements": [
+    {
+      "title": "NAEST Regional Level 2nd Prize Winner",
+      "organization": "National Anveshika Experimental Skill Test (NAEST)",
+      "year": "Regional Award",
+      "icon": "trophy",
+      "description": "Awarded 2nd Prize at the regional level for experimental physics problem-solving, innovative experimental design, and analytical accuracy."
+    },
+    {
+      "title": "NCC Cadet",
+      "organization": "National Cadet Corps",
+      "year": "Cadet Training",
+      "icon": "shield",
+      "description": "Trained under military instructors in discipline, tactical coordination, leadership, physical fitness, and civic responsibility."
+    },
+    {
+      "title": "District-Level Swimmer",
+      "organization": "District Sports Council",
+      "year": "Athletics",
+      "icon": "award",
+      "description": "Competed in district aquatic championships, building personal discipline, stamina, and consistent athletic preparation."
+    },
+    {
+      "title": "Indian Classical Vocal Music (5 Years)",
+      "organization": "Prayag Sangeet Samiti",
+      "year": "Cultural Cert.",
+      "icon": "music",
+      "description": "Completed five years of formal vocal training, mastering traditional ragas, rhythmic precision (taal), and patient discipline."
+    }
+  ],
+  "contact": {
+    "email": "abhishekpathak4312@gmail.com",
+    "phone": "+91 6394843151",
+    "location": "Lucknow / Kushinagar, UP, India",
+    "github": "https://github.com/raj4312",
+    "linkedin": "https://www.linkedin.com/in/abhishek-pathak-342a03308/"
+  }
+}

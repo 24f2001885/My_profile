@@ -1,0 +1,29 @@
+[
+  {
+    "id": "inq_1732182000001",
+    "date": "2026-11-20T14:30:00.000Z",
+    "name": "Sarah Jenkins",
+    "email": "sarah.jenkins@cloudtech-partners.io",
+    "subject": "SDE Role / Dual Degree Experience Inquiry",
+    "message": "Hi Abhishek, I came across your portfolio and was really impressed by your dual-degree work at IIT Madras and CSVTU Bhilai, especially your multi-tenant Trekking Management Application (TMA) setup. We have an opening for an Associate Backend Engineer on our Cloud Systems team. Are you currently exploring full-time or internship opportunities?",
+    "status": "unread"
+  },
+  {
+    "id": "inq_1732182000002",
+    "date": "2026-11-19T09:15:00.000Z",
+    "name": "Devansh Verma",
+    "email": "devansh.v@innovatetech.org",
+    "subject": "Question on Examination Portal (LMS) Telemetry Engine",
+    "message": "Hello Abhishek! I tested your Examination Management Portal on AWS. How did you structure the real-time score distribution charts in Chart.js with Gunicorn's low-memory thread workers on the 1GB EC2 instance? Would love to connect and exchange thoughts on low-footprint Python backend optimization.",
+    "status": "read"
+  },
+  {
+    "id": "inq_1732182000003",
+    "date": "2026-11-18T18:45:00.000Z",
+    "name": "Rajiv Mehta",
+    "email": "rajiv@summitventures.in",
+    "subject": "Full-Stack Collaboration on SaaS Platform",
+    "message": "Hey Abhishek, loved the tenant isolation architecture on TMA. We are building a workflow automation SaaS and are looking for someone strong in Flask, Docker, and PostgreSQL. Let me know if you have time for a quick 15-minute chat this week.",
+    "status": "unread"
+  }
+]

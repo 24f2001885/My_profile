@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PortfolioData",
+  "type": "object",
+  "required": ["profile", "education", "projects", "skills", "achievements", "contact"],
+  "properties": {
+    "profile": {
+      "type": "object",
+      "required": ["name", "titles", "tagline", "bio", "email", "phone", "github", "linkedin", "avatarUrl", "resumeUrl"],
+      "properties": {
+        "name": { "type": "string" },
+        "titles": { "type": "array", "items": { "type": "string" } },
+        "tagline": { "type": "string" },
+        "bio": { "type": "array", "items": { "type": "string" } },
+        "location": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "github": { "type": "string" },
+        "linkedin": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "resumeUrl": { "type": "string" }
+      }
+    },
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["degree", "institution", "period", "grade"],
+        "properties": {
+          "degree": { "type": "string" },
+          "specialization": { "type": "string" },
+          "institution": { "type": "string" },
+          "period": { "type": "string" },
+          "grade": { "type": "string" },
+          "badge": { "type": "string" },
+          "description": { "type": "string" },
+          "highlights": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "category", "featured", "tagline", "description", "techStack", "liveUrls", "githubUrl"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "featured": { "type": "boolean" },
+          "tagline": { "type": "string" },
+          "description": { "type": "string" },
+          "techStack": { "type": "array", "items": { "type": "string" } },
+          "architectureHighlights": { "type": "array", "items": { "type": "string" } },
+          "liveUrls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["label", "url"],
+              "properties": {
+                "label": { "type": "string" },
+                "url": { "type": "string" }
+              }
+            }
+          },
+          "githubUrl": { "type": "string" },
+          "image": { "type": "string" }
+        }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "required": ["languagesAndFrameworks", "backendAndCloud", "toolsAndData"],
+      "properties": {
+        "languagesAndFrameworks": { "type": "array", "items": { "type": "string" } },
+        "backendAndCloud": { "type": "array", "items": { "type": "string" } },
+        "toolsAndData": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "organization", "description"],
+        "properties": {
+          "title": { "type": "string" },
+          "organization": { "type": "string" },
+          "year": { "type": "string" },
+          "icon": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "required": ["email", "phone", "location", "github", "linkedin"],
+      "properties": {
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "location": { "type": "string" },
+        "github": { "type": "string" },
+        "linkedin": { "type": "string" }
+      }
+    }
+  }
+}
