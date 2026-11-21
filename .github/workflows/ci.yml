@@ -51,6 +51,10 @@ jobs:
               'assets/data/schema.json',
               'assets/docs/ABHISHEKPATHAK_CV.pdf',
               'assets/img/profile.jpg',
+              'assets/img/profile-styled.png',
+              'assets/img/tma-preview.jpg',
+              'assets/img/lms-preview.jpg',
+              'assets/img/infra-preview.jpg',
               'Dockerfile',
               'docker-compose.yml',
               'nginx.conf'
