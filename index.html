@@ -145,6 +145,10 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
     </ul>
 
     <div class="dock-actions-row">
+      <button class="dock-btn" id="dock-sound-btn" title="Toggle Synthesizer Audio FX (Mute/Unmute)">
+        <span id="sound-btn-icon">🔇</span>
+      </button>
+
       <button class="dock-btn" id="dock-theme-btn" title="Cycle Theme (Cyber / Matrix / Aurora / Paper)">
         <span id="theme-btn-icon">⚡</span>
       </button>
@@ -271,6 +275,14 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
           <div class="stat-label">Automated Push-to-Deploy GitOps Coverage</div>
         </div>
       </div>
+
+      <!-- Mouse Scroll Cue -->
+      <div class="hero-scroll-cue" id="hero-scroll-cue">
+        <div class="mouse-icon">
+          <div class="mouse-travel-dot"></div>
+        </div>
+        <span>SCROLL TO EXPLORE</span>
+      </div>
     </div>
   </header>
 
@@ -297,7 +309,7 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
             <span class="editor-line-num">01</span><span style="color:var(--accent-primary);"># Abhishek Pathak</span><br/>
             <span class="editor-line-num">02</span><span style="color:var(--text-muted);">&gt; Dual-Degree Student @ IIT Madras & CSVTU Bhilai</span><br/>
             <span class="editor-line-num">03</span><br/>
-            <span class="editor-line-num">04</span>I engineer robust backend architectures, RESTful APIs, and multi-tenant SaaS systems. My work focuses on building clean, high-performance software backed by automated CI/CD pipelines, Docker containerization, and AWS EC2 hosting.<br/>
+            <span class="editor-line-num">04</span><span class="bio-scrub-word">I</span> <span class="bio-scrub-word">engineer</span> <span class="bio-scrub-word">robust</span> <span class="bio-scrub-word">backend</span> <span class="bio-scrub-word">architectures,</span> <span class="bio-scrub-word">RESTful</span> <span class="bio-scrub-word">APIs,</span> <span class="bio-scrub-word">and</span> <span class="bio-scrub-word">multi-tenant</span> <span class="bio-scrub-word">SaaS</span> <span class="bio-scrub-word">systems.</span> <span class="bio-scrub-word">My</span> <span class="bio-scrub-word">work</span> <span class="bio-scrub-word">focuses</span> <span class="bio-scrub-word">on</span> <span class="bio-scrub-word">building</span> <span class="bio-scrub-word">clean,</span> <span class="bio-scrub-word">high-performance</span> <span class="bio-scrub-word">software</span> <span class="bio-scrub-word">backed</span> <span class="bio-scrub-word">by</span> <span class="bio-scrub-word">automated</span> <span class="bio-scrub-word">CI/CD</span> <span class="bio-scrub-word">pipelines,</span> <span class="bio-scrub-word">Docker</span> <span class="bio-scrub-word">containerization,</span> <span class="bio-scrub-word">and</span> <span class="bio-scrub-word">AWS</span> <span class="bio-scrub-word">EC2</span> <span class="bio-scrub-word">hosting.</span><br/>
             <span class="editor-line-num">05</span><br/>
             <span class="editor-line-num">06</span><span style="color:var(--accent-cyan);">$ core_philosophy:</span> "Show, don't claim. Real code, real metrics, zero downtime."
           </div>
@@ -311,7 +323,18 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
             <div style="border-left: 2px solid var(--accent-primary); padding-left: 0.8rem;">
               <strong style="color: var(--accent-primary);">IIT Madras (2024–2028)</strong>
               <div style="font-size: 0.85rem; color: var(--text-secondary);">BS in Data Science & Applications</div>
-              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-cyan);">CGPA: 7.8 (Ongoing)</div>
+              
+              <!-- Radial CGPA Gauge -->
+              <div class="cgpa-gauge-wrap" title="IIT Madras Current Academic Standing">
+                <svg class="cgpa-ring-svg" viewBox="0 0 64 64">
+                  <circle class="cgpa-ring-track" cx="32" cy="32" r="28"></circle>
+                  <circle class="cgpa-ring-fill" id="cgpa-circle-fill" cx="32" cy="32" r="28"></circle>
+                </svg>
+                <div>
+                  <div style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--text-primary);"><span id="cgpa-val">7.8</span><span style="font-size: 0.85rem; color: var(--text-muted);"> / 10.0</span></div>
+                  <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-primary);">IITM CGPA (Ongoing)</div>
+                </div>
+              </div>
             </div>
             <div style="border-left: 2px solid var(--accent-blue); padding-left: 0.8rem;">
               <strong style="color: var(--accent-blue);">CSVTU Bhilai (2025–2029)</strong>
@@ -481,6 +504,56 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
       <div class="skills-bento-grid" id="skills-grid">
         <!-- Injected via JavaScript from portfolio.json -->
       </div>
+
+      <!-- Two-Row Opposing Tech Logo Marquees -->
+      <div class="skills-marquees-section">
+        <div class="skills-marquee-row marquee-left">
+          <span class="marquee-pill">🐍 Python 3.12</span>
+          <span class="marquee-pill">🌶️ Flask REST</span>
+          <span class="marquee-pill">🐘 PostgreSQL</span>
+          <span class="marquee-pill">🐳 Docker & Compose</span>
+          <span class="marquee-pill">⚡ Nginx Alpine</span>
+          <span class="marquee-pill">☁️ AWS EC2</span>
+          <span class="marquee-pill">🔄 GitHub Actions</span>
+          <span class="marquee-pill">📊 Chart.js</span>
+          <span class="marquee-pill">🦄 Gunicorn WSGI</span>
+          <span class="marquee-pill">🛡️ JWT Auth</span>
+          <!-- Duplicate for seamless scroll loop -->
+          <span class="marquee-pill">🐍 Python 3.12</span>
+          <span class="marquee-pill">🌶️ Flask REST</span>
+          <span class="marquee-pill">🐘 PostgreSQL</span>
+          <span class="marquee-pill">🐳 Docker & Compose</span>
+          <span class="marquee-pill">⚡ Nginx Alpine</span>
+          <span class="marquee-pill">☁️ AWS EC2</span>
+          <span class="marquee-pill">🔄 GitHub Actions</span>
+          <span class="marquee-pill">📊 Chart.js</span>
+          <span class="marquee-pill">🦄 Gunicorn WSGI</span>
+          <span class="marquee-pill">🛡️ JWT Auth</span>
+        </div>
+        <div class="skills-marquee-row marquee-right">
+          <span class="marquee-pill">🌐 Vanilla JS (ES6+)</span>
+          <span class="marquee-pill">📐 Semantic HTML5</span>
+          <span class="marquee-pill">🎨 Modern CSS Grid</span>
+          <span class="marquee-pill">🔒 Argon2id Hashing</span>
+          <span class="marquee-pill">🔀 Multi-Tenant Isolation</span>
+          <span class="marquee-pill">📈 Data Science & ML</span>
+          <span class="marquee-pill">🐧 Ubuntu 24.04 LTS</span>
+          <span class="marquee-pill">💾 SQLite & Alembic</span>
+          <span class="marquee-pill">📡 RESTful API Design</span>
+          <span class="marquee-pill">🚀 GitOps Push-to-Deploy</span>
+          <!-- Duplicate for seamless scroll loop -->
+          <span class="marquee-pill">🌐 Vanilla JS (ES6+)</span>
+          <span class="marquee-pill">📐 Semantic HTML5</span>
+          <span class="marquee-pill">🎨 Modern CSS Grid</span>
+          <span class="marquee-pill">🔒 Argon2id Hashing</span>
+          <span class="marquee-pill">🔀 Multi-Tenant Isolation</span>
+          <span class="marquee-pill">📈 Data Science & ML</span>
+          <span class="marquee-pill">🐧 Ubuntu 24.04 LTS</span>
+          <span class="marquee-pill">💾 SQLite & Alembic</span>
+          <span class="marquee-pill">📡 RESTful API Design</span>
+          <span class="marquee-pill">🚀 GitOps Push-to-Deploy</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -559,8 +632,14 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
           </div>
         </div>
 
-        <!-- Right Column: Clean Contact Form (No Pre-filled Defaults!) -->
+        <!-- Right Column: Interactive GUI vs Terminal Contact Interface -->
         <div class="bento-card" style="padding: 2.5rem;">
+          <div class="contact-mode-switch">
+            <button type="button" class="mode-tab-btn active" id="mode-gui-btn">✨ Standard GUI Form</button>
+            <button type="button" class="mode-tab-btn" id="mode-term-btn">💻 Terminal Prompt (CLI)</button>
+          </div>
+
+          <!-- Standard GUI Form -->
           <form id="portfolio-contact-form">
             <!-- Honeypot anti-spam -->
             <input type="text" name="_gotcha" style="display:none !important;" tabindex="-1" autocomplete="off" />
@@ -593,6 +672,24 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
             </button>
           </form>
+
+          <!-- Interactive CLI Terminal Prompt View -->
+          <div class="terminal-contact-view" id="terminal-contact-view" style="display:none;">
+            <div style="color: var(--accent-primary); margin-bottom: 0.8rem; font-weight:600;">
+              // CLI TRANSMISSION PROTOCOL [v2.4]
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">
+              Transmit messages directly into Abhishek's console inbox via guided interactive CLI prompt.
+            </div>
+            <div id="cli-prompt-history" style="margin-bottom: 0.8rem; max-height: 220px; overflow-y: auto;">
+              <div><span style="color:var(--accent-green);">abhishek@portfolio:~$</span> send-message --init</div>
+              <div style="color:var(--text-secondary); margin-top: 0.3rem;">[1/4] Enter your name:</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem; background: rgba(255,255,255,0.04); padding: 0.4rem 0.6rem; border-radius: 6px;">
+              <span style="color:var(--accent-primary); font-family: var(--font-mono);">&gt;</span>
+              <input type="text" id="cli-contact-input" style="flex:1; background:transparent; border:none; outline:none; color:var(--text-primary); font-family:var(--font-mono); font-size:0.85rem;" placeholder="Type here and press Enter..." autocomplete="off" />
+            </div>
+          </div>
         </div>
 
       </div>
@@ -619,8 +716,12 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
 
         <div style="display: flex; align-items: center; gap: 1rem;">
           <span style="font-size: 0.82rem; color: var(--text-muted);">© 2026 Abhishek Pathak</span>
-          <a href="#hero" class="back-to-top-ring-btn" title="Back to top">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+          <a href="#hero" class="back-to-top-ring-wrap" title="Back to top">
+            <svg class="back-to-top-svg" viewBox="0 0 44 44">
+              <circle class="progress-ring-bg" cx="22" cy="22" r="18"></circle>
+              <circle class="progress-ring-circle" id="scroll-progress-ring" cx="22" cy="22" r="18"></circle>
+            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-primary); z-index: 1;"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
           </a>
         </div>
       </div>

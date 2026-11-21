@@ -404,7 +404,7 @@ function setupInquiriesActions() {
 // 5. Theme & Tabs Management
 // --------------------------------------------------------------------------
 function initDashboardTheme() {
-  const THEME_KEY = "ap_portfolio_theme";
+  const THEME_KEY = "ap_mission_theme";
   const saved = localStorage.getItem(THEME_KEY) || "cyber";
   setTheme(saved);
 

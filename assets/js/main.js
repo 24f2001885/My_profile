@@ -16,6 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollSpyAndProgress();
   initContactFormAndCopy();
 
+  // Master Plan Mission Control Enhancements
+  initAudioSynth();
+  initMagneticPull();
+  initHeroScrollCue();
+  initCountUpAndGauges();
+  initBioScrub();
+  initContactModeSwitch();
+  initKonamiCode();
+
   // Load and hydrate dynamic content from portfolio.json
   fetch("assets/data/portfolio.json")
     .then(res => {
@@ -604,6 +613,15 @@ function initScrollSpyAndProgress() {
     if (progressBar) progressBar.style.width = `${scrollPercent}%`;
     if (timelineGlow) timelineGlow.style.height = `${Math.min(100, scrollPercent * 1.3)}%`;
 
+    // Circular SVG scroll progress on Back to Top button
+    const scrollRing = document.getElementById("scroll-progress-ring");
+    if (scrollRing) {
+      // Circumference for r=18 is 2 * PI * 18 = 113.1
+      const circumference = 113.1;
+      const offset = circumference - (scrollPercent / 100) * circumference;
+      scrollRing.style.strokeDashoffset = `${offset}px`;
+    }
+
     // Giant footer text amber reveal
     if (giantFooter) {
       const rect = giantFooter.getBoundingClientRect();
@@ -643,6 +661,16 @@ function renderProjects(projects) {
   if (!container || !projects) return;
 
   container.innerHTML = projects.map(proj => {
+    const isTMA = proj.id === "tma";
+    const tenantSwitcherMarkup = isTMA ? `
+      <div class="tenant-switcher-bar" id="tma-tenant-bar">
+        <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); margin-right:0.3rem;">Switch Subdomain:</span>
+        <button type="button" class="tenant-pill-btn active" data-tenant-url="https://tma.tenant0.abhishek4312.info" data-tenant-label="Tenant 0 (Default)">Tenant 0</button>
+        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant1.abhishek4312.info" data-tenant-label="Tenant 1 (Expedition Alpha)">Tenant 1</button>
+        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant2.abhishek4312.info" data-tenant-label="Tenant 2 (Alpine High)">Tenant 2</button>
+      </div>
+    ` : "";
+
     return `
       <article class="project-case-card" id="card-${escapeHTML(proj.id)}" data-tech="${proj.techStack.join(',')}">
         <div class="project-layout-grid">
@@ -663,6 +691,8 @@ function renderProjects(projects) {
             <div class="project-tech-tags">
               ${proj.techStack.map(t => `<span class="tech-chip">${escapeHTML(t)}</span>`).join("")}
             </div>
+
+            ${tenantSwitcherMarkup}
 
             <div class="project-actions">
               ${proj.liveUrls ? proj.liveUrls.map(l => `
@@ -722,6 +752,25 @@ function renderProjects(projects) {
       openCaseStudyModal(pid);
     });
   });
+
+  // Attach TMA Tenant Switcher pills
+  const tmaCard = document.getElementById("card-tma");
+  if (tmaCard) {
+    const tenantBtns = tmaCard.querySelectorAll(".tenant-pill-btn");
+    const mockupUrl = tmaCard.querySelector(".mockup-url-bar");
+    const primaryLiveLink = tmaCard.querySelector(".project-actions a.btn-primary");
+
+    tenantBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tenantBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const url = btn.getAttribute("data-tenant-url");
+        if (mockupUrl) mockupUrl.textContent = url;
+        if (primaryLiveLink) primaryLiveLink.href = url;
+        playSynthesizedSound("click");
+      });
+    });
+  }
 }
 
 function renderArchitectureSVG(projectId) {
@@ -854,8 +903,165 @@ function openCaseStudyModal(projectId) {
           ${escapeHTML(cs.improvements || "Implement Redis caching layer and edge geolocation load balancing.")}
         </p>
       </div>
+
+      <!-- Architectural Source Code Inspection Viewer -->
+      <div class="code-viewer-container" id="cs-code-viewer">
+        <div class="code-viewer-header">
+          <div class="code-tabs-list" id="cs-code-tabs">
+            <!-- Tabs injected dynamically -->
+          </div>
+          <button type="button" class="code-copy-btn" id="cs-copy-code-btn">Copy Code 📋</button>
+        </div>
+        <pre class="code-pre-block" id="cs-code-pre"></pre>
+      </div>
     </div>
   `;
+
+  // Code tabs data definition
+  const codeSnippets = {
+    tma: {
+      "nginx.conf": `# Subdomain Routing & Multi-Tenant Reverse Proxy
+server {
+    listen 80;
+    server_name ~^(?<subdomain>.+)\\.abhishek4312\\.info$;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Tenant-ID $subdomain;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 60s;
+    }
+}`,
+      "tenant_middleware.py": `# Flask Multi-Tenant Schema Resolver Hook
+from flask import g, request
+
+@app.before_request
+def resolve_tenant():
+    host = request.headers.get("Host", "")
+    tenant_id = host.split(".")[0] if "." in host else "default"
+    g.tenant_id = tenant_id
+    # Bind connection pool to tenant-isolated PostgreSQL schema
+    db.session.execute(f"SET search_path TO {tenant_id}, public")`,
+      "docker-compose.yml": `services:
+  tma-app:
+    build: .
+    image: tma-backend:latest
+    restart: unless-stopped
+    mem_limit: 256m
+    environment:
+      - DATABASE_URL=postgresql://tma_user:\${DB_PASS}@db:5432/tma_prod
+    ports:
+      - "8000:8000"`
+    },
+    lms: {
+      "proctor_eval.py": `# LMS Automated MCQ & Integrity Evaluation
+def evaluate_submission(exam_id, student_id, answers):
+    exam = Exam.query.get_or_404(exam_id)
+    score = 0
+    for q_id, opt in answers.items():
+        if exam.answer_key.get(q_id) == opt:
+            score += exam.points_per_q
+    
+    submission = Submission(exam_id=exam_id, student_id=student_id, score=score)
+    db.session.add(submission)
+    db.session.commit()
+    return {"status": "evaluated", "score": score, "percentile": calc_percentile(exam_id, score)}`,
+      "analytics.js": `// Chart.js Score Distribution Renderer
+function renderExamHistogram(ctx, scoreBuckets) {
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
+      datasets: [{
+        label: 'Candidate Count',
+        data: scoreBuckets,
+        backgroundColor: '#4F7CFF',
+        borderRadius: 6
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+  });
+}`
+    },
+    infra: {
+      "deploy.yml": `# GitHub Actions GitOps Push-to-Deploy
+name: Production EC2 Deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rsync to AWS Student VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: \${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: \${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/portfolio
+            git pull origin main
+            docker compose down && docker compose up -d --build`,
+      "nginx.conf": `# EC2 Low-Memory Nginx Static Optimization
+worker_processes 1;
+events { worker_connections 512; }
+http {
+    include /etc/nginx/mime.types;
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript;
+    gzip_min_length 256;
+
+    server {
+        listen 80;
+        server_name abhishek4312.info;
+        root /usr/share/nginx/html;
+        index index.html;
+    }
+}`
+    }
+  };
+
+  const projectSnippets = codeSnippets[projectId] || codeSnippets["infra"];
+  const tabsContainer = document.getElementById("cs-code-tabs");
+  const preBlock = document.getElementById("cs-code-pre");
+  const copyBtn = document.getElementById("cs-copy-code-btn");
+
+  if (tabsContainer && preBlock && projectSnippets) {
+    const filenames = Object.keys(projectSnippets);
+    let activeFile = filenames[0];
+
+    tabsContainer.innerHTML = filenames.map((fn, idx) => `
+      <button type="button" class="code-tab-btn ${idx === 0 ? 'active' : ''}" data-file="${escapeHTML(fn)}">${escapeHTML(fn)}</button>
+    `).join("");
+
+    preBlock.textContent = projectSnippets[activeFile];
+
+    tabsContainer.querySelectorAll(".code-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabsContainer.querySelectorAll(".code-tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeFile = btn.getAttribute("data-file");
+        preBlock.textContent = projectSnippets[activeFile];
+        playSynthesizedSound("key");
+      });
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        copyText(projectSnippets[activeFile], "Code copied!");
+        copyBtn.textContent = "Copied ✓";
+        copyBtn.style.color = "var(--accent-green)";
+        setTimeout(() => {
+          copyBtn.textContent = "Copy Code 📋";
+          copyBtn.style.color = "";
+        }, 2000);
+      });
+    }
+  }
 
   modal.classList.add("active");
   modal.setAttribute("aria-hidden", "false");
@@ -1159,4 +1365,447 @@ function escapeHTML(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+/* --------------------------------------------------------------------------
+   16. Audio Synthesizer Engine (Web Audio API - Zero External Assets)
+   -------------------------------------------------------------------------- */
+let audioCtx = null;
+let soundEnabled = localStorage.getItem("ap_sound_fx") === "enabled";
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playSynthesizedSound(type) {
+  if (!soundEnabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    if (type === "click") {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(400, now + 0.045);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    } else if (type === "key") {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.025);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.03);
+    } else if (type === "chime") {
+      const freqs = [523.25, 659.25, 783.99];
+      freqs.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+        gain.gain.setValueAtTime(0.06, now + idx * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.22);
+      });
+    } else if (type === "fanfare") {
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.09, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.45);
+      });
+    }
+  } catch (e) {
+    console.warn("Audio synthesis error:", e);
+  }
+}
+
+function initAudioSynth() {
+  const soundBtn = document.getElementById("dock-sound-btn");
+  const iconSpan = document.getElementById("sound-btn-icon");
+
+  function updateIcon() {
+    if (iconSpan) {
+      iconSpan.textContent = soundEnabled ? "🔊" : "🔇";
+      iconSpan.title = soundEnabled ? "Sound Effects: ON (Click to Mute)" : "Sound Effects: MUTED (Click to Enable)";
+    }
+  }
+  updateIcon();
+
+  if (soundBtn) {
+    soundBtn.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      localStorage.setItem("ap_sound_fx", soundEnabled ? "enabled" : "disabled");
+      updateIcon();
+      if (soundEnabled) {
+        getAudioContext();
+        playSynthesizedSound("chime");
+      }
+    });
+  }
+
+  // Attach sound to interactive buttons and navigation links
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("button, .dock-link, .btn, .social-link, .copy-trigger, .theme-btn");
+    if (target && !target.closest("#dock-sound-btn")) {
+      playSynthesizedSound("click");
+    }
+  });
+
+  // Attach key sound to terminal inputs
+  document.addEventListener("keydown", (e) => {
+    if (e.target.matches("input, textarea") && soundEnabled) {
+      playSynthesizedSound("key");
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   17. Magnetic Physics Pull on Interactive Elements
+   -------------------------------------------------------------------------- */
+function initMagneticPull() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const magneticTargets = document.querySelectorAll(".magnetic-btn, .dock-link, .dock-btn, .social-link");
+
+  magneticTargets.forEach(el => {
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const dx = (e.clientX - centerX) * 0.28;
+      const dy = (e.clientY - centerY) * 0.28;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+      el.style.transition = "transform 0.1s ease-out";
+    });
+
+    el.addEventListener("mouseleave", () => {
+      el.style.transform = "translate(0px, 0px)";
+      el.style.transition = "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   18. Hero Mouse Scroll Cue
+   -------------------------------------------------------------------------- */
+function initHeroScrollCue() {
+  const cue = document.getElementById("hero-scroll-cue");
+  if (!cue) return;
+
+  cue.addEventListener("click", () => {
+    const aboutSec = document.getElementById("about");
+    if (aboutSec) {
+      aboutSec.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 150) {
+      cue.style.opacity = "0";
+      cue.style.pointerEvents = "none";
+    } else {
+      cue.style.opacity = "1";
+      cue.style.pointerEvents = "auto";
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   19. Stats Count-Up & CGPA Radial Ring Gauge
+   -------------------------------------------------------------------------- */
+function initCountUpAndGauges() {
+  // 1. CGPA Ring Fill
+  const cgpaFill = document.getElementById("cgpa-circle-fill");
+  const cgpaVal = document.getElementById("cgpa-val");
+
+  if (cgpaFill && cgpaVal) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Circumference for r=28 is 175.92. 7.8/10.0 = 78% => offset is 175.92 * (1 - 0.78) = 38.7
+          cgpaFill.style.strokeDashoffset = "38.7px";
+
+          const target = 7.8;
+          const duration = 1500;
+          const startTime = performance.now();
+
+          function step(now) {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const current = (progress * target).toFixed(1);
+            cgpaVal.textContent = current;
+            if (progress < 1) {
+              requestAnimationFrame(step);
+            }
+          }
+          requestAnimationFrame(step);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const parentCard = cgpaFill.closest(".bento-card") || cgpaFill;
+    observer.observe(parentCard);
+  }
+
+  // 2. Hero stats strip numbers
+  const statNumbers = document.querySelectorAll(".hero-stats-strip .stat-number");
+  if (statNumbers.length > 0) {
+    const statObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          statNumbers.forEach(el => {
+            const raw = el.textContent.trim();
+            if (raw === "2" || raw === "3") {
+              const target = parseInt(raw, 10);
+              let val = 0;
+              const timer = setInterval(() => {
+                val++;
+                el.textContent = val;
+                if (val >= target) clearInterval(timer);
+              }, 250);
+            }
+          });
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    const statsStrip = document.querySelector(".hero-stats-strip");
+    if (statsStrip) statObserver.observe(statsStrip);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   20. Scroll-Scrubbed Bio Word Highlight
+   -------------------------------------------------------------------------- */
+function initBioScrub() {
+  const words = document.querySelectorAll(".bio-scrub-word");
+  const aboutSec = document.getElementById("about");
+  if (!words.length || !aboutSec) return;
+
+  window.addEventListener("scroll", () => {
+    const rect = aboutSec.getBoundingClientRect();
+    const windowH = window.innerHeight;
+
+    if (rect.top < windowH * 0.75 && rect.bottom > 0) {
+      const scrollProgress = Math.max(0, Math.min(1, (windowH * 0.75 - rect.top) / (rect.height * 0.6)));
+      const activeCount = Math.floor(scrollProgress * words.length);
+
+      words.forEach((w, idx) => {
+        if (idx <= activeCount) {
+          w.classList.add("active-word");
+        } else {
+          w.classList.remove("active-word");
+        }
+      });
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   21. Contact Mode Switcher (GUI Form vs Guided Terminal CLI Prompt)
+   -------------------------------------------------------------------------- */
+function initContactModeSwitch() {
+  const guiBtn = document.getElementById("mode-gui-btn");
+  const termBtn = document.getElementById("mode-term-btn");
+  const guiForm = document.getElementById("portfolio-contact-form");
+  const termView = document.getElementById("terminal-contact-view");
+  const cliInput = document.getElementById("cli-contact-input");
+  const cliHistory = document.getElementById("cli-prompt-history");
+
+  if (!guiBtn || !termBtn || !guiForm || !termView || !cliInput) return;
+
+  guiBtn.addEventListener("click", () => {
+    guiBtn.classList.add("active");
+    termBtn.classList.remove("active");
+    guiForm.style.display = "block";
+    termView.style.display = "none";
+    playSynthesizedSound("chime");
+  });
+
+  termBtn.addEventListener("click", () => {
+    termBtn.classList.add("active");
+    guiBtn.classList.remove("active");
+    guiForm.style.display = "none";
+    termView.style.display = "block";
+    cliInput.focus();
+    playSynthesizedSound("chime");
+  });
+
+  // Guided CLI State Machine: 0: Name, 1: Email, 2: Subject, 3: Message
+  let cliStep = 0;
+  const cliData = { name: "", email: "", subject: "", message: "" };
+
+  cliInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const val = cliInput.value.trim();
+      if (!val) return;
+
+      const echoDiv = document.createElement("div");
+      echoDiv.innerHTML = `<span style="color:var(--accent-primary);">&gt;</span> ${escapeHTML(val)}`;
+      cliHistory.appendChild(echoDiv);
+      cliInput.value = "";
+
+      if (val.toLowerCase() === "clear" || val.toLowerCase() === "reset") {
+        cliStep = 0;
+        cliHistory.innerHTML = `
+          <div><span style="color:var(--accent-green);">abhishek@portfolio:~$</span> send-message --init</div>
+          <div style="color:var(--text-secondary); margin-top: 0.3rem;">[1/4] Enter your name:</div>
+        `;
+        return;
+      }
+
+      if (cliStep === 0) {
+        cliData.name = val;
+        cliStep = 1;
+        const nextDiv = document.createElement("div");
+        nextDiv.style.color = "var(--text-secondary)";
+        nextDiv.style.marginTop = "0.3rem";
+        nextDiv.textContent = `[2/4] Enter your email address:`;
+        cliHistory.appendChild(nextDiv);
+      } else if (cliStep === 1) {
+        if (!val.includes("@") || !val.includes(".")) {
+          const errDiv = document.createElement("div");
+          errDiv.style.color = "var(--accent-danger)";
+          errDiv.textContent = `[!] Invalid email format. Try again:`;
+          cliHistory.appendChild(errDiv);
+          return;
+        }
+        cliData.email = val;
+        cliStep = 2;
+        const nextDiv = document.createElement("div");
+        nextDiv.style.color = "var(--text-secondary)";
+        nextDiv.style.marginTop = "0.3rem";
+        nextDiv.textContent = `[3/4] Enter subject / topic:`;
+        cliHistory.appendChild(nextDiv);
+      } else if (cliStep === 2) {
+        cliData.subject = val;
+        cliStep = 3;
+        const nextDiv = document.createElement("div");
+        nextDiv.style.color = "var(--text-secondary)";
+        nextDiv.style.marginTop = "0.3rem";
+        nextDiv.textContent = `[4/4] Enter your message transmission:`;
+        cliHistory.appendChild(nextDiv);
+      } else if (cliStep === 3) {
+        cliData.message = val;
+        cliStep = 4;
+
+        try {
+          const stored = JSON.parse(localStorage.getItem("ap_inquiries") || "[]");
+          stored.unshift({
+            id: "inq_" + Date.now(),
+            date: new Date().toISOString(),
+            name: cliData.name,
+            email: cliData.email,
+            subject: cliData.subject,
+            message: cliData.message,
+            status: "unread"
+          });
+          localStorage.setItem("ap_inquiries", JSON.stringify(stored));
+        } catch (err) {
+          console.warn("Could not save inquiry:", err);
+        }
+
+        const successDiv = document.createElement("div");
+        successDiv.style.color = "var(--accent-green)";
+        successDiv.style.marginTop = "0.5rem";
+        successDiv.style.fontWeight = "600";
+        successDiv.innerHTML = `[✓] TRANSMISSION DELIVERED to Abhishek's console!<br/><span style="font-weight:normal; color:var(--text-muted); font-size:0.8rem;">Type 'reset' to send another message.</span>`;
+        cliHistory.appendChild(successDiv);
+
+        playSynthesizedSound("fanfare");
+        if (window.confetti) {
+          window.confetti({ particleCount: 90, spread: 60, origin: { y: 0.7 } });
+        }
+      } else if (cliStep === 4) {
+        const promptDiv = document.createElement("div");
+        promptDiv.style.color = "var(--text-muted)";
+        promptDiv.textContent = `Transmission completed. Type 'reset' to begin a new message.`;
+        cliHistory.appendChild(promptDiv);
+      }
+
+      cliHistory.scrollTop = cliHistory.scrollHeight;
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   22. Konami Code Easter Egg ("Hire Mode" Golden Matrix Theme)
+   -------------------------------------------------------------------------- */
+function initKonamiCode() {
+  const konamiSeq = [
+    "ArrowUp", "ArrowUp",
+    "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight",
+    "ArrowLeft", "ArrowRight",
+    "b", "a"
+  ];
+  let konamiIndex = 0;
+
+  console.log(
+    `%c🚀 MISSION CONTROL INITIALIZED // ABHISHEK PATHAK
+%c• IIT Madras (BS Data Science) & CSVTU Bhilai (B.Tech CSE AI)
+• Multi-Tenant Cloud Architecture | Docker | AWS EC2 Student VPS
+• Hint: Enter Konami Code (↑ ↑ ↓ ↓ ← → ← → B A) for Golden Hire Mode!
+• Repo: https://github.com/24f2001885/My_profile`,
+    "color: #FFB020; font-family: monospace; font-size: 14px; font-weight: bold;",
+    "color: #22D3EE; font-family: monospace; font-size: 11px;"
+  );
+
+  window.addEventListener("keydown", (e) => {
+    if (e.target.matches("input, textarea")) return;
+
+    if (e.key.toLowerCase() === konamiSeq[konamiIndex].toLowerCase()) {
+      konamiIndex++;
+      if (konamiIndex === konamiSeq.length) {
+        document.body.classList.toggle("hire-mode-active");
+        konamiIndex = 0;
+
+        playSynthesizedSound("fanfare");
+        if (window.confetti) {
+          window.confetti({
+            particleCount: 160,
+            spread: 90,
+            origin: { y: 0.5 },
+            colors: ["#FFD700", "#FFB020", "#FFFFFF", "#FFA500"]
+          });
+        }
+        console.log("%c🌟 GOLDEN HIRE MODE ACTIVATED! Welcome to Mission Control Special Edition.", "color: #FFD700; font-weight: bold; font-size: 14px;");
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
 }
