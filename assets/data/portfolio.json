@@ -84,8 +84,9 @@
         "Zero-downtime deployment through GitHub Actions CD"
       ],
       "liveUrls": [
-        { "label": "Tenant 0 (Himalayas Club)", "url": "https://tma.tenant0.abhishek4312.info" },
-        { "label": "Tenant 1 (Western Ghats Club)", "url": "https://tma.tenant1.abhishek4312.info" }
+        { "label": "Platform Owner Portal", "url": "https://tma.abhishekpathak.site" },
+        { "label": "Tenant 0 (Himalayas Club)", "url": "https://tma.tenant0.abhishekpathak.site" },
+        { "label": "Tenant 1 (Western Ghats Club)", "url": "https://tma.tenant1.abhishekpathak.site" }
       ],
       "githubUrl": "https://github.com/raj4312/tma",
       "image": "assets/img/tma-preview.jpg"
@@ -113,7 +114,7 @@
         "Low-memory Gunicorn WSGI configuration (-w 1 --threads 2)"
       ],
       "liveUrls": [
-        { "label": "Live LMS Portal", "url": "https://lms.abhishek4312.info" }
+        { "label": "Live LMS Portal", "url": "https://lms.abhishekpathak.site" }
       ],
       "githubUrl": "https://github.com/raj4312/lms",
       "image": "assets/img/lms-preview.jpg"
@@ -141,7 +142,7 @@
         "Zero-downtime container rolling restart strategy"
       ],
       "liveUrls": [
-        { "label": "Live Portfolio Domain", "url": "https://abhishek4312.info" }
+        { "label": "Live Portfolio Domain", "url": "https://abhishekpathak.site" }
       ],
       "githubUrl": "https://github.com/raj4312/portfolio",
       "image": "assets/img/infra-preview.jpg"

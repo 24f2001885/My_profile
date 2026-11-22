@@ -16,13 +16,13 @@ jobs:
       - name: Configure SSH Key
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.AWS_SSH_KEY || secrets.AWS_EC2_SSH_KEY }}
+          ssh-private-key: ${{ secrets.AWS_SSH_KEY || secrets.AWS_EC2_SSH_KEY || secrets.EC2_SSH_KEY }}
 
       - name: Deploy Static Files to VPS Webroot & Docker Engine
         run: |
-          TARGET_HOST="${{ secrets.AWS_HOST || secrets.AWS_EC2_HOST }}"
-          TARGET_USER="${{ secrets.AWS_USER || secrets.AWS_EC2_USER || 'ubuntu' }}"
-          TARGET_PORT="${{ secrets.AWS_SSH_PORT || 22 }}"
+          TARGET_HOST="${{ secrets.AWS_HOST || secrets.AWS_EC2_HOST || secrets.EC2_HOST }}"
+          TARGET_USER="${{ secrets.AWS_USER || secrets.AWS_EC2_USER || secrets.EC2_USER || 'ubuntu' }}"
+          TARGET_PORT="${{ secrets.AWS_SSH_PORT || secrets.EC2_PORT || 22 }}"
 
           echo "Initiating deployment to $TARGET_USER@$TARGET_HOST:$TARGET_PORT..."
 
@@ -53,4 +53,4 @@ jobs:
                sudo systemctl reload nginx
              fi"
           
-          echo "🚀 Deployment successfully completed! Site live at https://abhishek4312.info"
+          echo "🚀 Deployment successfully completed! Site live at https://abhishekpathak.site"
