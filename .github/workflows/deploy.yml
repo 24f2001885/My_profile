@@ -35,6 +35,8 @@ jobs:
             --exclude '.git*' \
             --exclude '.github*' \
             --exclude 'plan*' \
+            --exclude 'docker*' \
+            --exclude 'Dockerfile' \
             -e "ssh -o StrictHostKeyChecking=no -p $TARGET_PORT" \
             ./ $TARGET_USER@$TARGET_HOST:/var/www/portfolio/
 
@@ -45,12 +47,8 @@ jobs:
               "echo '${{ secrets.DASHBOARD_PASSWORD }}' | sudo htpasswd -i -c /etc/nginx/.htpasswd $DASH_USER && sudo chmod 640 /etc/nginx/.htpasswd && sudo chown root:www-data /etc/nginx/.htpasswd"
           fi
 
-          # 4. Reload Host Nginx or Docker Container with zero downtime
+          # 4. Set permissions and reload Host Nginx with zero downtime
           ssh -o StrictHostKeyChecking=no -p $TARGET_PORT $TARGET_USER@$TARGET_HOST \
-            "if command -v docker >/dev/null 2>&1 && [ -f /var/www/portfolio/docker-compose.yml ]; then
-               cd /var/www/portfolio && docker compose up -d --build
-             elif command -v nginx >/dev/null 2>&1; then
-               sudo systemctl reload nginx
-             fi"
+            "sudo chown -R www-data:www-data /var/www/portfolio && sudo chmod -R 755 /var/www/portfolio && sudo systemctl reload nginx"
           
           echo "🚀 Deployment successfully completed! Site live at https://abhishekpathak.site"
