@@ -423,17 +423,18 @@ function initInteractiveTerminal() {
         appendOutput(`Abhishek Pathak:
 - Dual-Degree: BS Data Science @ IIT Madras & B.Tech CSE AI @ CSVTU Bhilai
 - Focus: Backend architecture, multi-tenant SaaS, Docker, AWS EC2 DevOps
-- Production: abhishek4312.info (Low-memory Alpine Nginx + automated CI/CD)`);
+- Production: abhishekpathak.site (Low-memory Alpine Nginx + automated CI/CD)
+- Profiles: GitHub (@24f2001885), LinkedIn, Instagram (@liveuser4312)`);
         break;
 
       case "projects":
         appendOutput(`Featured Applications:
 1. Trekking Management App (TMA): Multi-tenant SaaS with PostgreSQL schema isolation
-   -> https://tma.tenant0.abhishek4312.info
+   -> https://tma.tenant0.abhishekpathak.site
 2. Examination Management Portal (LMS): Proctored MCQ engine & Chart.js analytics
-   -> https://lms.abhishek4312.info
+   -> https://lms.abhishekpathak.site
 3. Cloud & GitOps Infrastructure: AWS EC2 1GB RAM / 4GB Swap + GitHub Actions
-   -> https://abhishek4312.info`);
+   -> https://abhishekpathak.site`);
         break;
 
       case "skills":
@@ -673,9 +674,9 @@ function renderProjects(projects) {
     const tenantSwitcherMarkup = isTMA ? `
       <div class="tenant-switcher-bar" id="tma-tenant-bar">
         <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); margin-right:0.3rem;">Switch Subdomain:</span>
-        <button type="button" class="tenant-pill-btn active" data-tenant-url="https://tma.tenant0.abhishek4312.info" data-tenant-label="Tenant 0 (Default)">Tenant 0</button>
-        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant1.abhishek4312.info" data-tenant-label="Tenant 1 (Expedition Alpha)">Tenant 1</button>
-        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant2.abhishek4312.info" data-tenant-label="Tenant 2 (Alpine High)">Tenant 2</button>
+        <button type="button" class="tenant-pill-btn active" data-tenant-url="https://tma.tenant0.abhishekpathak.site" data-tenant-label="Tenant 0 (Himalayas)">Tenant 0</button>
+        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant1.abhishekpathak.site" data-tenant-label="Tenant 1 (Western Ghats)">Tenant 1</button>
+        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.abhishekpathak.site" data-tenant-label="Platform Owner Portal">Platform</button>
       </div>
     ` : "";
 
@@ -704,7 +705,7 @@ function renderProjects(projects) {
 
             <div class="project-actions">
               ${isTMA ? `
-                <a href="https://tma.tenant0.abhishek4312.info" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="tma-active-live-btn" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
+                <a href="https://tma.tenant0.abhishekpathak.site" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="tma-active-live-btn" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   <span id="tma-live-btn-text">Open Tenant 0 (Himalayas)</span>
                 </a>
@@ -737,7 +738,7 @@ function renderProjects(projects) {
                   <span class="mockup-dot y"></span>
                   <span class="mockup-dot g"></span>
                 </div>
-                <div class="mockup-url-bar">${escapeHTML(proj.liveUrls ? proj.liveUrls[0].url : 'https://abhishek4312.info')}</div>
+                <div class="mockup-url-bar">${escapeHTML(isTMA ? 'https://tma.tenant0.abhishekpathak.site' : (proj.liveUrls && proj.liveUrls.length ? proj.liveUrls[0].url : 'https://abhishekpathak.site'))}</div>
               </div>
               <div class="mockup-body">
                 <img src="${escapeHTML(proj.image || 'assets/img/infra-preview.jpg')}" alt="${escapeHTML(proj.title)}" class="mockup-screenshot" loading="lazy" />
@@ -1076,7 +1077,7 @@ http {
 
     server {
         listen 80;
-        server_name abhishek4312.info;
+        server_name abhishekpathak.site;
         root /usr/share/nginx/html;
         index index.html;
     }
@@ -2021,7 +2022,7 @@ function initApiPlayground() {
               id: "tma",
               name: "Trekking Management Application (TMA)",
               architecture: "Multi-Tenant PostgreSQL + Gunicorn + Alpine Nginx",
-              live_domains: ["tma.tenant0.abhishek4312.info", "tma.tenant1.abhishek4312.info"],
+              live_domains: ["tma.tenant0.abhishekpathak.site", "tma.tenant1.abhishekpathak.site", "tma.abhishekpathak.site"],
               tenant_isolation: "Strict schema separation & subdomain middleware",
               status: "HEALTHY (Uptime 99.98%)"
             },
@@ -2029,7 +2030,7 @@ function initApiPlayground() {
               id: "lms",
               name: "Examination Management Portal (LMS/EMP)",
               architecture: "Role-based proctoring engine with Chart.js histogram analytics",
-              live_domain: "lms.abhishek4312.info",
+              live_domain: "lms.abhishekpathak.site",
               status: "HEALTHY"
             },
             {
@@ -2037,6 +2038,7 @@ function initApiPlayground() {
               name: "Production VPS Living Infrastructure",
               host: "AWS Student EC2 (1 GB RAM + 4 GB Swap)",
               pipeline: "GitHub Actions automated rsync & docker-compose reload",
+              live_domain: "abhishekpathak.site",
               status: "HEALTHY"
             }
           ]

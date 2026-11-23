@@ -14,8 +14,9 @@
     "location": "Lucknow / Kushinagar, UP, India",
     "email": "abhishekpathak4312@gmail.com",
     "phone": "+91 6394843151",
-    "github": "https://github.com/raj4312",
+    "github": "https://github.com/24f2001885",
     "linkedin": "https://www.linkedin.com/in/abhishek-pathak-7a65a931b/",
+    "instagram": "https://www.instagram.com/liveuser4312/",
     "avatarUrl": "assets/img/profile.jpg",
     "resumeUrl": "assets/docs/ABHISHEKPATHAK_CV.pdf"
   },
@@ -84,21 +85,21 @@
         "Zero-downtime deployment through GitHub Actions CD"
       ],
       "liveUrls": [
-        { "label": "Platform Owner Portal", "url": "https://tma.abhishekpathak.site" },
-        { "label": "Tenant 0 (Himalayas Club)", "url": "https://tma.tenant0.abhishekpathak.site" },
-        { "label": "Tenant 1 (Western Ghats Club)", "url": "https://tma.tenant1.abhishekpathak.site" }
+        { "label": "Open Tenant 0 (Himalayas)", "url": "https://tma.tenant0.abhishekpathak.site" },
+        { "label": "Open Tenant 1 (Western Ghats)", "url": "https://tma.tenant1.abhishekpathak.site" },
+        { "label": "Platform Owner Portal", "url": "https://tma.abhishekpathak.site" }
       ],
-      "githubUrl": "https://github.com/raj4312/tma",
+      "githubUrl": "https://github.com/24f2001885/tma",
       "image": "assets/img/tma-preview.jpg"
     },
     {
       "id": "lms",
       "title": "Examination Management Portal (LMS / EMP)",
-      "category": "Backend & Analytics",
+      "category": "Backend & Automated Testing",
       "featured": true,
-      "tagline": "Role-based academic evaluation portal with interactive Chart.js analytics and proctored examination engine.",
-      "description": "A robust examination and academic assessment portal with role-based access control (Admin, Examiner, Student). Supports automated viva scheduling, timed proctored MCQs, instant grading logic, and responsive score distribution analytics.",
-      "techStack": ["Python", "Flask", "Gunicorn", "SQLite/PostgreSQL", "Chart.js", "Docker"],
+      "tagline": "Role-based proctored academic assessment portal with interactive Chart.js analytics and Playwright test suite.",
+      "description": "A full-stack academic evaluation system engineered with strict role-based access control (Admin, Examiner, Student). Supports timed proctored examinations, automated grading engines, Playwright E2E verification, and responsive student score distribution analytics.",
+      "techStack": ["Python", "Flask", "SQLite/PostgreSQL", "Chart.js", "Playwright", "Docker", "GitHub Actions"],
       "metrics": ["400+ Concurrent Students", "18,400+ Auto-Graded MCQs", "< 40ms Latency"],
       "caseStudy": {
         "problem": "High-stakes university examinations required proctored evaluation, real-time telemetry, automated viva queueing, and immediate grading without overloading lightweight VPS infrastructure.",
@@ -114,20 +115,20 @@
         "Low-memory Gunicorn WSGI configuration (-w 1 --threads 2)"
       ],
       "liveUrls": [
-        { "label": "Live LMS Portal", "url": "https://lms.abhishekpathak.site" }
+        { "label": "Live Examination Portal", "url": "https://lms.abhishekpathak.site" }
       ],
-      "githubUrl": "https://github.com/raj4312/lms",
+      "githubUrl": "https://github.com/24f2001885/lms-production",
       "image": "assets/img/lms-preview.jpg"
     },
     {
       "id": "infra",
-      "title": "3-Project CI/CD & AWS Student EC2 Cloud Infrastructure",
-      "category": "DevOps & Cloud",
+      "title": "AWS EC2 Cloud Infrastructure & GitOps CI/CD",
+      "category": "DevOps & Cloud Systems",
       "featured": true,
-      "tagline": "Production cloud hosting on a 1 GB RAM AWS EC2 instance with Nginx reverse proxy and Let's Encrypt SSL.",
-      "description": "Engineered a low-footprint cloud infrastructure hosting 3 full-stack applications, reverse proxy, and SSL on a constrained 1 GB RAM EC2 instance. Features automated 4 GB swap allocation, container memory ceilings, Certbot SSL automation, and GitHub Actions continuous deployment.",
-      "techStack": ["AWS EC2", "Nginx", "Docker Compose", "Let's Encrypt SSL", "GitHub Actions", "Linux/Bash"],
-      "metrics": ["1 GB RAM / 4 GB Swap", "3 Subdomains", "Zero-Downtime CI/CD"],
+      "tagline": "Production multi-container edge stack deployed on a 1 GB RAM AWS EC2 VPS with zero-downtime CI/CD.",
+      "description": "Engineered high-efficiency cloud hosting powering 3 production full-stack web platforms on a constrained 1 GB RAM AWS EC2 instance. Configured 4 GB swap allocation, Alpine Nginx reverse proxy, automated Certbot SSL/TLS renewal, container memory ceilings, and GitHub Actions continuous deployment.",
+      "techStack": ["AWS EC2", "Docker Compose", "Nginx", "GitHub Actions", "Let's Encrypt SSL", "Linux/Bash"],
+      "metrics": ["1 GB RAM / 4 GB Swap", "3 Live Subdomains", "Zero-Downtime GitOps"],
       "caseStudy": {
         "problem": "Running 3 full-stack applications with databases, reverse proxy, and SSL certificates on an AWS Student EC2 micro instance (1 GB RAM) causes frequent kernel Out-Of-Memory (OOM) crashes.",
         "architecture": "Configured 4 GB swap with low kernel swappiness (vm.swappiness=10), Alpine Nginx reverse proxy (< 15 MB RAM), Docker Compose resource limits, and an automated GitHub Actions CI/CD deployment pipeline.",
@@ -142,9 +143,9 @@
         "Zero-downtime container rolling restart strategy"
       ],
       "liveUrls": [
-        { "label": "Live Portfolio Domain", "url": "https://abhishekpathak.site" }
+        { "label": "Production Edge Domain", "url": "https://abhishekpathak.site" }
       ],
-      "githubUrl": "https://github.com/raj4312/portfolio",
+      "githubUrl": "https://github.com/24f2001885/My_profile",
       "image": "assets/img/infra-preview.jpg"
     }
   ],
@@ -209,7 +210,8 @@
     "email": "abhishekpathak4312@gmail.com",
     "phone": "+91 6394843151",
     "location": "Lucknow / Kushinagar, UP, India",
-    "github": "https://github.com/raj4312",
-    "linkedin": "https://www.linkedin.com/in/abhishek-pathak-7a65a931b/"
+    "github": "https://github.com/24f2001885",
+    "linkedin": "https://www.linkedin.com/in/abhishek-pathak-7a65a931b/",
+    "instagram": "https://www.instagram.com/liveuser4312/"
   }
 }

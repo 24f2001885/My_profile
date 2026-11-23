@@ -1588,6 +1588,7 @@ section {
   align-items: center;
   justify-content: space-between;
   text-decoration: none;
+  color: inherit;
   cursor: pointer;
   transition: all 0.2s;
 }

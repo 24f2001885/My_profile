@@ -476,6 +476,7 @@ function hydrateForm() {
   setValue("dash-phone", p.phone);
   setValue("dash-github", p.github);
   setValue("dash-linkedin", p.linkedin);
+  setValue("dash-instagram", p.instagram || "https://www.instagram.com/liveuser4312/");
   setValue("dash-tagline", p.tagline);
   setValue("dash-titles", (p.titles || []).join(", "));
   setValue("dash-bio", (p.bio || []).join("\n\n"));
@@ -609,6 +610,7 @@ function collectFormData() {
   portfolioData.profile.phone = getValue("dash-phone");
   portfolioData.profile.github = getValue("dash-github");
   portfolioData.profile.linkedin = getValue("dash-linkedin");
+  portfolioData.profile.instagram = getValue("dash-instagram");
   portfolioData.profile.tagline = getValue("dash-tagline");
   portfolioData.profile.titles = splitComma(getValue("dash-titles"));
   portfolioData.profile.bio = getValue("dash-bio").split("\n\n").map(s => s.trim()).filter(Boolean);
