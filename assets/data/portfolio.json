@@ -67,27 +67,27 @@
       "title": "Trekking Management Application (TMA)",
       "category": "Full-Stack & Cloud",
       "featured": true,
-      "tagline": "Multi-tenant SaaS expedition platform with database isolation and automated Pytest CI suite.",
-      "description": "A full-stack, enterprise-grade trekking club management platform engineered with database schema isolation for multiple independent tenants. Features role-based access control, participant slot reservations, expedition route tracking, and low-memory container orchestration.",
+      "tagline": "Multi-tenant SaaS expedition platform on AWS with database schema isolation across tma.tenant0, tma.tenant1 & tma.abhishekpathak.site.",
+      "description": "A full-stack, enterprise-grade trekking club management platform engineered with database schema isolation for multiple independent tenants. Features dynamic subdomain routing across tma.tenant0.abhishekpathak.site (Tenant 0: Himalayas), tma.tenant1.abhishekpathak.site (Tenant 1: Western Ghats), and the tma.abhishekpathak.site Platform Owner Portal.",
       "techStack": ["Python", "Flask", "PostgreSQL", "Docker", "Nginx", "Pytest"],
       "metrics": ["2 Isolated Tenants", "96.4% Pytest Suite", "14ms Query Latency"],
       "caseStudy": {
         "problem": "Managing expeditions across multiple independent clubs required strict database isolation without incurring prohibitive costs of dedicated cloud VMs per club on a student budget.",
-        "architecture": "Configured PostgreSQL schema-level multi-tenancy. A single Flask application instance routes dynamic requests based on subdomain (tenant0 vs tenant1), executing tenant migrations cleanly while sharing common core dependencies.",
+        "architecture": "Configured PostgreSQL schema-level multi-tenancy. A single Flask application instance routes dynamic requests based on subdomain (tma.tenant0.abhishekpathak.site vs tma.tenant1.abhishekpathak.site vs tma.abhishekpathak.site), executing tenant migrations cleanly while sharing common core dependencies.",
         "decisions": "Chose schema separation over database-per-tenant to run comfortably within 250 MB memory ceilings. Containerized with low-memory Gunicorn thread workers and an automated Pytest test suite.",
         "results": "Achieved sub-15ms database queries, zero cross-tenant data leakage, and 100% automated test coverage on every pull request.",
         "improvements": "Implement Redis caching layer for route telemetry and real-time offline-first PWA sync for mountain trail guides."
       },
       "architectureHighlights": [
-        "Multi-Tenant Architecture with tenant schema isolation (Tenant 0 & Tenant 1)",
+        "Multi-Tenant Architecture with tenant schema isolation (tma.tenant0, tma.tenant1 & tma.abhishekpathak.site)",
         "Automated Pytest test suite with code coverage thresholds",
         "Dockerized PostgreSQL persistence with low-memory resource ceilings",
         "Zero-downtime deployment through GitHub Actions CD"
       ],
       "liveUrls": [
-        { "label": "Open Tenant 0 (Himalayas)", "url": "https://tma.tenant0.abhishekpathak.site" },
-        { "label": "Open Tenant 1 (Western Ghats)", "url": "https://tma.tenant1.abhishekpathak.site" },
-        { "label": "Platform Owner Portal", "url": "https://tma.abhishekpathak.site" }
+        { "label": "Tenant 0 (Trekking Adventures)", "url": "https://tma.tenant0.abhishekpathak.site" },
+        { "label": "Tenant 1 (Apex Altitude)", "url": "https://tma.tenant1.abhishekpathak.site" },
+        { "label": "Platform Control Plane", "url": "https://tma.abhishekpathak.site" }
       ],
       "githubUrl": "https://github.com/24f2001885/tma",
       "image": "assets/img/tma-preview.jpg"

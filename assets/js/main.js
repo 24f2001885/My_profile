@@ -435,7 +435,9 @@ function initInteractiveTerminal() {
       case "projects":
         appendOutput(`Featured Applications:
 1. Trekking Management App (TMA): Multi-tenant SaaS with PostgreSQL schema isolation
-   -> https://tma.tenant0.abhishekpathak.site
+   -> Platform Portal: https://tma.abhishekpathak.site
+   -> Tenant 0 (Himalayas): https://tma.tenant0.abhishekpathak.site
+   -> Tenant 1 (Western Ghats): https://tma.tenant1.abhishekpathak.site
 2. Examination Management Portal (LMS): Proctored MCQ engine & Chart.js analytics
    -> https://lms.abhishekpathak.site
 3. Cloud & GitOps Infrastructure: AWS EC2 1GB RAM / 4GB Swap + GitHub Actions
@@ -775,9 +777,13 @@ function renderProjects(projects) {
     const tenantSwitcherMarkup = isTMA ? `
       <div class="tenant-switcher-bar" id="tma-tenant-bar">
         <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); margin-right:0.3rem;">Switch Subdomain:</span>
-        <button type="button" class="tenant-pill-btn active" data-tenant-url="https://tma.tenant0.abhishekpathak.site" data-tenant-label="Tenant 0 (Himalayas)">Tenant 0</button>
-        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant1.abhishekpathak.site" data-tenant-label="Tenant 1 (Western Ghats)">Tenant 1</button>
-        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.abhishekpathak.site" data-tenant-label="Platform Owner Portal">Platform</button>
+        <button type="button" class="tenant-pill-btn active" data-tenant-url="https://tma.tenant0.abhishekpathak.site" data-tenant-label="Tenant 0 (Trekking Adventures)" data-tenant-img="assets/img/tma-tenant0.jpg">Tenant 0 (Himalayas)</button>
+        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.tenant1.abhishekpathak.site" data-tenant-label="Tenant 1 (Apex Altitude)" data-tenant-img="assets/img/tma-tenant1.jpg">Tenant 1 (Western Ghats)</button>
+        <button type="button" class="tenant-pill-btn" data-tenant-url="https://tma.abhishekpathak.site" data-tenant-label="Platform Owner Portal" data-tenant-img="assets/img/tma-platform.jpg">Platform Portal</button>
+      </div>
+      <div class="demo-creds-strip" style="margin:0.5rem 0 1rem; font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); background:rgba(255,255,255,0.03); padding:0.4rem 0.75rem; border-radius:8px; border:1px dashed var(--border-glass); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.4rem;">
+        <span>🔑 Demo Login: <code style="color:var(--accent-primary);">admin@demo.com</code> / <code style="color:var(--accent-primary);">Demo@123</code></span>
+        <span style="color:var(--accent-cyan); font-size:0.7rem;">(Subdomains &amp; Database Isolated)</span>
       </div>
     ` : "";
 
@@ -804,11 +810,17 @@ function renderProjects(projects) {
 
             ${tenantSwitcherMarkup}
 
-            <div class="project-actions">
+            <div class="project-actions" style="flex-wrap:wrap; gap:0.6rem;">
               ${isTMA ? `
                 <a href="https://tma.tenant0.abhishekpathak.site" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="tma-active-live-btn" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   <span id="tma-live-btn-text">Open Tenant 0 (Himalayas)</span>
+                </a>
+                <a href="https://tma.tenant1.abhishekpathak.site" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.82rem; padding:0.48rem 0.85rem;" title="Apex Altitude Expeditions">
+                  <span>Tenant 1 ↗</span>
+                </a>
+                <a href="https://tma.abhishekpathak.site" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size:0.82rem; padding:0.48rem 0.85rem;" title="Platform Owner Control Plane">
+                  <span>Platform Portal ↗</span>
                 </a>
               ` : (proj.liveUrls ? proj.liveUrls.map(l => `
                 <a href="${escapeHTML(l.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
@@ -882,9 +894,14 @@ function renderProjects(projects) {
         btn.classList.add("active");
         const url = btn.getAttribute("data-tenant-url");
         const label = btn.getAttribute("data-tenant-label") || btn.textContent.trim();
+        const img = btn.getAttribute("data-tenant-img");
         if (mockupUrl) mockupUrl.textContent = url;
         if (primaryLiveLink) primaryLiveLink.href = url;
         if (liveLinkText) liveLinkText.textContent = `Open ${label}`;
+        if (img) {
+          const mockupImg = tmaCard.querySelector(".mockup-screenshot");
+          if (mockupImg) mockupImg.src = img;
+        }
         playSynthesizedSound("click");
       });
     });
@@ -1081,18 +1098,21 @@ function openCaseStudyModal(projectId) {
   // Code tabs data definition
   const codeSnippets = {
     tma: {
-      "nginx.conf": `# Subdomain Routing & Multi-Tenant Reverse Proxy
+      "nginx.conf": `# Subdomain Routing & Multi-Tenant Reverse Proxy (Production)
 server {
-    listen 80;
-    server_name ~^(?<subdomain>.+)\\.abhishek4312\\.info$;
+    listen 443 ssl http2;
+    server_name tma.abhishekpathak.site tma.tenant0.abhishekpathak.site tma.tenant1.abhishekpathak.site;
+
+    ssl_certificate /etc/letsencrypt/live/abhishekpathak.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/abhishekpathak.site/privkey.pem;
 
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass http://127.0.0.1:5001; # TMA Multi-Tenant Gunicorn Container
         proxy_set_header Host $host;
-        proxy_set_header X-Tenant-ID $subdomain;
+        proxy_set_header X-Tenant-ID $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_connect_timeout 5s;
-        proxy_read_timeout 60s;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }`,
       "tenant_middleware.py": `# Flask Multi-Tenant Schema Resolver Hook
@@ -2398,8 +2418,8 @@ function initArchNodeInspector() {
       icon: "⚡",
       stats: [
         { label: "Listen Ports", val: "80 (Redirect 301) / 443 (SSL)" },
-        { label: "Subdomain Routing", val: "~^(?<subdomain>.+)\\\\.abhishek4312\\\\.info$" },
-        { label: "Upstream Socket", val: "proxy_pass http://127.0.0.1:8000" },
+        { label: "Subdomain Routing", val: "tma.*.abhishekpathak.site" },
+        { label: "Upstream Socket", val: "proxy_pass http://127.0.0.1:5001" },
         { label: "Proxy Buffers", val: "16 8k (zero disk buffer spill)" }
       ],
       desc: "Dispatches incoming subdomains (e.g. tma.tenant0, lms) directly to upstream Docker microservices, setting X-Tenant-ID and real remote client headers."
