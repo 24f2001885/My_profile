@@ -15,7 +15,11 @@
   <meta property="og:url" content="https://abhishekpathak.site/" />
   <meta property="og:title" content="Abhishek Pathak | Full-Stack & Backend Systems Engineer" />
   <meta property="og:description" content="Mission Control developer portfolio for Abhishek Pathak. Dual-degree engineer from IIT Madras & CSVTU Bhilai specializing in robust backend architectures." />
-  <meta property="og:image" content="https://abhishekpathak.site/assets/img/profile-styled.png" />
+  <meta property="og:image" content="https://abhishekpathak.site/assets/img/hero_portrait_composite.webp" />
+
+  <!-- Preload LCP Hero Image -->
+  <link rel="preload" as="image" href="assets/img/hero_portrait_composite_1600w.webp" media="(max-width: 900px)" type="image/webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/img/hero_portrait_composite.webp" media="(min-width: 901px)" type="image/webp" fetchpriority="high" />
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230C1224' stroke='%23FFB020' stroke-width='6'/%3E%3Ctext x='50' y='63' font-family='sans-serif' font-size='42' font-weight='900' fill='%23FFB020' text-anchor='middle'%3EA.%3C/text%3E%3Ccircle cx='76' cy='32' r='8' fill='%233DDC97'/%3E%3C/svg%3E" />
 
@@ -329,16 +333,33 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
           </div>
         </div>
 
-        <!-- Right Column: 3D Tilt Portrait & Orbiting Halo -->
+        <!-- Right Column: 3D Tilt Portrait & Hologram Stage -->
         <div class="hero-visual-col">
-          <div class="tilt-portrait-card" id="tilt-card">
-            <div class="portrait-glow-ring"></div>
-            <div class="portrait-inner-frame">
-              <img src="assets/img/profile-styled.png" alt="Abhishek Pathak" class="portrait-img" id="hero-avatar-img" />
+          <div class="tilt-portrait-stage" id="tilt-card">
+            <!-- Subtle Ambient Cyan Pulse Glow behind image -->
+            <div class="hero-ambient-glow" id="hero-ambient-glow" aria-hidden="true"></div>
+
+            <!-- Main Hero Portrait Composite Image -->
+            <div class="hero-portrait-wrap" id="hero-portrait-layer">
+              <picture class="hero-portrait-picture">
+                <source media="(max-width: 900px)" srcset="assets/img/hero_portrait_composite_1600w.webp" type="image/webp" />
+                <source media="(min-width: 901px)" srcset="assets/img/hero_portrait_composite.webp" type="image/webp" />
+                <img
+                  src="assets/img/hero_portrait_composite.webp"
+                  alt="Abhishek Pathak – Backend & Cloud Engineer"
+                  width="3120"
+                  height="2020"
+                  loading="eager"
+                  decoding="async"
+                  fetchpriority="high"
+                  class="hero-portrait-img"
+                  id="hero-portrait-img"
+                />
+              </picture>
             </div>
 
-            <!-- Orbiting Halo of Core Tech -->
-            <div class="orbit-ring">
+            <!-- Orbiting Halo of Core Tech (kept unmasked per Task 6) -->
+            <div class="orbit-ring" id="hero-orbit-ring" aria-hidden="true">
               <div class="orbit-node node-python" title="Python 3.12">Py</div>
               <div class="orbit-node node-flask" title="Flask REST Framework">Fl</div>
               <div class="orbit-node node-docker" title="Docker Containerization">Dk</div>
@@ -347,15 +368,18 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
               <div class="orbit-node node-postgres" title="PostgreSQL Database">SQL</div>
             </div>
 
-            <!-- Floating Micro Cards -->
-            <div class="floating-code-snippet">
-              <span style="color:var(--accent-primary);">services:</span><br/>
-              &nbsp;&nbsp;portfolio:<br/>
-              &nbsp;&nbsp;&nbsp;&nbsp;image: alpine:nginx
-            </div>
+            <!-- Floating Glass Chips (in front of image) -->
+            <div class="hero-chips-layer" id="hero-chips-layer">
+              <div class="floating-code-snippet glass-chip" id="hero-chip-snippet">
+                <div class="snippet-tag">docker-compose.yml</div>
+                <span style="color:var(--accent-primary);">services:</span><br/>
+                &nbsp;&nbsp;portfolio:<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;image: alpine:nginx
+              </div>
 
-            <div class="floating-status-pill">
-              <span>deploy ✔ passed · 42s</span>
+              <div class="floating-status-pill glass-chip" id="hero-chip-deploy">
+                <span>deploy ✔ passed · 42 s</span>
+              </div>
             </div>
           </div>
         </div>
