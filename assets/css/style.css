@@ -177,11 +177,14 @@ body {
 }
 
 .blob-1 {
-  width: 600px;
-  height: 600px;
+  width: 650px;
+  height: 650px;
   background: var(--accent-primary);
-  top: -150px;
-  left: -100px;
+  top: 15%;
+  right: 15%;
+  left: auto;
+  opacity: 0.25;
+  filter: blur(100px);
 }
 
 .blob-2 {
@@ -792,19 +795,27 @@ section {
   transition: transform 0.12s ease-out;
 }
 
-/* Subtle Ambient Cyan Pulse Glow behind image */
+/* Radiant Ambient Lighting Glow directly behind Hero Image */
 .hero-ambient-glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 95%;
-  height: 95%;
-  transform: translate(-50%, -50%) translateZ(-20px);
-  background: radial-gradient(circle at 50% 50%, rgba(70, 205, 255, 0.18) 0%, rgba(70, 205, 255, 0.06) 45%, transparent 72%);
+  width: 140%;
+  height: 140%;
+  transform: translate(-50%, -50%) translateZ(-25px);
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--accent-primary) 0%,
+    var(--accent-primary) 22%,
+    rgba(70, 205, 255, 0.45) 44%,
+    rgba(70, 205, 255, 0.15) 60%,
+    transparent 75%
+  );
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  filter: blur(40px);
+  filter: blur(65px);
+  opacity: 0.6;
   animation: ambientGlowPulse 8s ease-in-out infinite;
   will-change: transform, opacity;
   transition: transform 0.12s ease-out;
@@ -2130,6 +2141,16 @@ section {
 }
 
 @media (max-width: 768px) {
+  .blob-1 {
+    top: 50px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 360px;
+    height: 360px;
+    filter: blur(80px);
+    opacity: 0.28;
+  }
   .hero-section {
     padding-top: 5.5rem;
     padding-bottom: 3.5rem;
