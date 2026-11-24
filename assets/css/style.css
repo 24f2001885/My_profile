@@ -788,6 +788,8 @@ section {
   border: none;
   border-radius: 0;
   box-shadow: none;
+  cursor: pointer;
+  transition: transform 0.12s ease-out;
 }
 
 /* Subtle Ambient Cyan Pulse Glow behind image */
@@ -805,6 +807,7 @@ section {
   filter: blur(40px);
   animation: ambientGlowPulse 8s ease-in-out infinite;
   will-change: transform, opacity;
+  transition: transform 0.12s ease-out;
 }
 
 @keyframes ambientGlowPulse {
@@ -828,7 +831,18 @@ section {
   z-index: 2;
   transform-style: preserve-3d;
   transform: translateZ(10px);
+  animation: heroFloatIdle 6s ease-in-out infinite;
   will-change: transform;
+  transition: transform 0.12s ease-out;
+}
+
+@keyframes heroFloatIdle {
+  0%, 100% {
+    transform: translateZ(10px) translateY(0);
+  }
+  50% {
+    transform: translateZ(10px) translateY(-7px);
+  }
 }
 
 .hero-portrait-picture {
@@ -940,6 +954,7 @@ section {
   transform-style: preserve-3d;
   transform: translateZ(40px);
   will-change: transform;
+  transition: transform 0.12s ease-out;
 }
 
 .hero-chips-layer .glass-chip {

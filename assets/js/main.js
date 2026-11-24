@@ -542,138 +542,93 @@ function initHeroTilt() {
   const stage = document.getElementById("tilt-card");
   if (!stage) return;
 
+  const visualCol = stage.closest(".hero-visual-col") || stage;
   const portraitLayer = document.getElementById("hero-portrait-layer");
   const glowLayer = document.getElementById("hero-ambient-glow");
   const chipsLayer = document.getElementById("hero-chips-layer");
 
   const maxTilt = 8; // degrees
-  const lerpFactor = 0.08; // smooth easing
-
-  let currentRotX = 0, currentRotY = 0;
-  let currentPortX = 0, currentPortY = 0;
-  let currentGlowX = 0, currentGlowY = 0;
-  let currentChipX = 0, currentChipY = 0;
-
-  let targetRotX = 0, targetRotY = 0;
-  let targetPortX = 0, targetPortY = 0;
-  let targetGlowX = 0, targetGlowY = 0;
-  let targetChipX = 0, targetChipY = 0;
-
   let isHovered = false;
-  let rafId = null;
 
   function canRunTilt() {
-    const isFinePointer = window.matchMedia("(pointer: fine)").matches;
     const isDesktop = window.innerWidth >= 768;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    return isFinePointer && isDesktop && !reducedMotion;
+    return isDesktop && !reducedMotion;
   }
 
-  function resetTransforms() {
-    stage.style.transform = "";
-    if (portraitLayer) portraitLayer.style.transform = "";
-    if (glowLayer) glowLayer.style.transform = "";
-    if (chipsLayer) chipsLayer.style.transform = "";
-  }
-
-  function renderFrame() {
-    // Lerp easing towards targets
-    currentRotX += (targetRotX - currentRotX) * lerpFactor;
-    currentRotY += (targetRotY - currentRotY) * lerpFactor;
-    currentPortX += (targetPortX - currentPortX) * lerpFactor;
-    currentPortY += (targetPortY - currentPortY) * lerpFactor;
-    currentGlowX += (targetGlowX - currentGlowX) * lerpFactor;
-    currentGlowY += (targetGlowY - currentGlowY) * lerpFactor;
-    currentChipX += (targetChipX - currentChipX) * lerpFactor;
-    currentChipY += (targetChipY - currentChipY) * lerpFactor;
-
-    // Apply 3D perspective tilt to stage (transform only)
-    stage.style.transform = `perspective(1000px) rotateX(${currentRotX.toFixed(3)}deg) rotateY(${currentRotY.toFixed(3)}deg)`;
-
-    // Parallax layers:
-    // Portrait layer moves most relative to glow
-    if (portraitLayer) {
-      portraitLayer.style.transform = `translate3d(${currentPortX.toFixed(2)}px, ${currentPortY.toFixed(2)}px, 15px)`;
-    }
-
-    // Glow layer moves less (subtle background drift)
-    if (glowLayer) {
-      glowLayer.style.transform = `translate(-50%, -50%) translate3d(${currentGlowX.toFixed(2)}px, ${currentGlowY.toFixed(2)}px, -20px)`;
-    }
-
-    // Floating chips move most in foreground
-    if (chipsLayer) {
-      chipsLayer.style.transform = `translate3d(${currentChipX.toFixed(2)}px, ${currentChipY.toFixed(2)}px, 40px)`;
-    }
-
-    const diff = Math.abs(targetRotX - currentRotX) +
-                 Math.abs(targetRotY - currentRotY) +
-                 Math.abs(targetPortX - currentPortX) +
-                 Math.abs(targetPortY - currentPortY) +
-                 Math.abs(targetChipX - currentChipX) +
-                 Math.abs(targetChipY - currentChipY);
-
-    if (isHovered || diff > 0.01) {
-      rafId = requestAnimationFrame(renderFrame);
-    } else {
-      resetTransforms();
-      rafId = null;
-    }
-  }
-
-  function onPointerMove(e) {
+  function handleMove(e) {
     if (!canRunTilt()) return;
 
-    const rect = stage.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    const rect = visualCol.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
 
-    const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width * 0.5)));
-    const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height * 0.5)));
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    // 3D tilt up to 8 degrees
-    targetRotX = -normY * maxTilt;
-    targetRotY = normX * maxTilt;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
 
-    // Parallax: portrait moves (12px), glow less (-6px), chips most (22px)
-    targetPortX = normX * 12;
-    targetPortY = normY * 12;
-    targetGlowX = -normX * 6;
-    targetGlowY = -normY * 6;
-    targetChipX = normX * 22;
-    targetChipY = normY * 22;
+    const normX = Math.max(-1, Math.min(1, (x - centerX) / (rect.width * 0.5)));
+    const normY = Math.max(-1, Math.min(1, (y - centerY) / (rect.height * 0.5)));
+
+    const rotateX = -normY * maxTilt;
+    const rotateY = normX * maxTilt;
+
+    // Fast, responsive CSS transition during active movement
+    stage.style.transition = "transform 0.1s ease-out";
+    stage.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+
+    if (portraitLayer) {
+      portraitLayer.style.transition = "transform 0.1s ease-out";
+      portraitLayer.style.transform = `translate3d(${(normX * 14).toFixed(1)}px, ${(normY * 14).toFixed(1)}px, 15px)`;
+    }
+
+    if (glowLayer) {
+      glowLayer.style.transition = "transform 0.1s ease-out";
+      glowLayer.style.transform = `translate(-50%, -50%) translate3d(${(-normX * 8).toFixed(1)}px, ${(-normY * 8).toFixed(1)}px, -20px)`;
+    }
+
+    if (chipsLayer) {
+      chipsLayer.style.transition = "transform 0.1s ease-out";
+      chipsLayer.style.transform = `translate3d(${(normX * 24).toFixed(1)}px, ${(normY * 24).toFixed(1)}px, 40px)`;
+    }
 
     isHovered = true;
-    if (!rafId) {
-      rafId = requestAnimationFrame(renderFrame);
-    }
   }
 
-  function onPointerLeave() {
+  function handleLeave() {
+    if (!canRunTilt()) return;
     isHovered = false;
-    // Smooth reset on pointer leave via lerp loop
-    targetRotX = 0;
-    targetRotY = 0;
-    targetPortX = 0;
-    targetPortY = 0;
-    targetGlowX = 0;
-    targetGlowY = 0;
-    targetChipX = 0;
-    targetChipY = 0;
 
-    if (!rafId) {
-      rafId = requestAnimationFrame(renderFrame);
+    // Smooth ease-out reset back to resting pose
+    stage.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+    stage.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+
+    if (portraitLayer) {
+      portraitLayer.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      portraitLayer.style.transform = "translate3d(0px, 0px, 10px)";
+    }
+
+    if (glowLayer) {
+      glowLayer.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      glowLayer.style.transform = "translate(-50%, -50%) translate3d(0px, 0px, -20px)";
+    }
+
+    if (chipsLayer) {
+      chipsLayer.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      chipsLayer.style.transform = "translate3d(0px, 0px, 40px)";
     }
   }
 
-  // Pointer event listeners on stage
-  stage.addEventListener("pointermove", onPointerMove);
-  stage.addEventListener("pointerleave", onPointerLeave);
+  // Bind to both visualCol and stage for seamless tracking across all devices
+  visualCol.addEventListener("mousemove", handleMove);
+  visualCol.addEventListener("mouseleave", handleLeave);
+  visualCol.addEventListener("pointermove", handleMove);
+  visualCol.addEventListener("pointerleave", handleLeave);
 
-  // Resize listener
   window.addEventListener("resize", () => {
     if (!canRunTilt()) {
-      resetTransforms();
+      handleLeave();
     }
   });
 
