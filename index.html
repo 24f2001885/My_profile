@@ -23,7 +23,7 @@
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230C1224' stroke='%23FFB020' stroke-width='6'/%3E%3Ctext x='50' y='63' font-family='sans-serif' font-size='42' font-weight='900' fill='%23FFB020' text-anchor='middle'%3EA.%3C/text%3E%3Ccircle cx='76' cy='32' r='8' fill='%233DDC97'/%3E%3C/svg%3E" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=2026.28" />
+  <link rel="stylesheet" href="assets/css/style.css?v=2026.29" />
 
   <!-- Canvas Confetti Library for sudo hire-me & contact celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
@@ -341,32 +341,34 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
 
             <!-- Main Hero Portrait Composite Image -->
             <div class="hero-portrait-wrap" id="hero-portrait-layer">
-              <picture class="hero-portrait-picture" style="display: block; width: 100%; max-width: 100%; min-width: 0;">
-                <source media="(max-width: 900px)" srcset="assets/img/hero_portrait_composite_1600w.webp" type="image/webp" />
-                <source media="(min-width: 901px)" srcset="assets/img/hero_portrait_composite.webp" type="image/webp" />
-                <img
-                  src="assets/img/hero_portrait_composite.webp"
-                  alt="Abhishek Pathak – Backend & Cloud Engineer"
-                  width="3120"
-                  height="2020"
-                  loading="eager"
-                  decoding="async"
-                  fetchpriority="high"
-                  class="hero-portrait-img"
-                  id="hero-portrait-img"
-                  style="display: block; width: 100%; max-width: 100%; height: auto; object-fit: contain;"
-                />
-              </picture>
+              <div class="hero-portrait-bob">
+                <picture class="hero-portrait-picture" style="display: block; width: 100%; max-width: 100%; min-width: 0;">
+                  <source media="(max-width: 900px)" srcset="assets/img/hero_portrait_composite_1600w.webp" type="image/webp" />
+                  <source media="(min-width: 901px)" srcset="assets/img/hero_portrait_composite.webp" type="image/webp" />
+                  <img
+                    src="assets/img/hero_portrait_composite.webp"
+                    alt="Abhishek Pathak – Backend & Cloud Engineer"
+                    width="3120"
+                    height="2020"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                    class="hero-portrait-img"
+                    id="hero-portrait-img"
+                    style="display: block; width: 100%; max-width: 100%; height: auto; object-fit: contain;"
+                  />
+                </picture>
+              </div>
             </div>
 
             <!-- Orbiting Halo of Core Tech (kept unmasked per Task 6) -->
             <div class="orbit-ring" id="hero-orbit-ring" aria-hidden="true">
-              <div class="orbit-node node-python" title="Python 3.12">Py</div>
-              <div class="orbit-node node-flask" title="Flask REST Framework">Fl</div>
-              <div class="orbit-node node-docker" title="Docker Containerization">Dk</div>
-              <div class="orbit-node node-aws" title="AWS Cloud Infrastructure">AWS</div>
-              <div class="orbit-node node-nginx" title="Nginx Reverse Proxy">Ng</div>
-              <div class="orbit-node node-postgres" title="PostgreSQL Database">SQL</div>
+              <div class="orbit-node node-python" title="Python 3.12"><span class="orbit-label">Py</span></div>
+              <div class="orbit-node node-flask" title="Flask REST Framework"><span class="orbit-label">Fl</span></div>
+              <div class="orbit-node node-docker" title="Docker Containerization"><span class="orbit-label">Dk</span></div>
+              <div class="orbit-node node-aws" title="AWS Cloud Infrastructure"><span class="orbit-label">AWS</span></div>
+              <div class="orbit-node node-nginx" title="Nginx Reverse Proxy"><span class="orbit-label">Ng</span></div>
+              <div class="orbit-node node-postgres" title="PostgreSQL Database"><span class="orbit-label">SQL</span></div>
             </div>
 
             <!-- Floating Glass Chips (in front of image) -->

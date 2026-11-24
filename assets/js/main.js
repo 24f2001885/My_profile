@@ -65,8 +65,9 @@ const THEME_ICONS = {
 };
 
 function initThemeEngine() {
-  const savedTheme = localStorage.getItem("ap_mission_theme") || "cyber";
-  setTheme(savedTheme, false);
+  const savedTheme = localStorage.getItem("ap_mission_theme");
+  const initialTheme = THEMES.includes(savedTheme) ? savedTheme : "cyber";
+  setTheme(initialTheme, false);
 
   const themeBtn = document.getElementById("dock-theme-btn");
   if (themeBtn) {
@@ -92,6 +93,21 @@ function setTheme(themeName, animate = false) {
   localStorage.setItem("ap_mission_theme", themeName);
   const iconSpan = document.getElementById("theme-btn-icon");
   if (iconSpan) iconSpan.textContent = THEME_ICONS[themeName] || "⚡";
+
+  // Keep mobile browser address bar color in sync
+  const themeColors = {
+    cyber: "#070A12",
+    matrix: "#040805",
+    aurora: "#0A0A16",
+    paper: "#F8FAFC"
+  };
+  let metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (!metaTheme) {
+    metaTheme = document.createElement("meta");
+    metaTheme.name = "theme-color";
+    document.head.appendChild(metaTheme);
+  }
+  metaTheme.content = themeColors[themeName] || "#070A12";
 }
 
 /* --------------------------------------------------------------------------
@@ -550,12 +566,65 @@ function initHeroTilt() {
   const chipsLayer = document.getElementById("hero-chips-layer");
 
   const maxTilt = 8; // degrees
-  let isHovered = false;
+  let rafId = null;
+  let targetRotX = 0;
+  let targetRotY = 0;
+  let targetNormX = 0;
+  let targetNormY = 0;
+  let currentRotX = 0;
+  let currentRotY = 0;
+  let currentNormX = 0;
+  let currentNormY = 0;
+  let isPointerActive = false;
 
   function canRunTilt() {
     const isDesktop = window.innerWidth >= 768;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     return isDesktop && !reducedMotion;
+  }
+
+  function updateTilt() {
+    if (!canRunTilt()) {
+      rafId = null;
+      return;
+    }
+
+    // Lerp easing for ultra smooth, jitter-free motion
+    const ease = isPointerActive ? 0.12 : 0.08;
+    currentRotX += (targetRotX - currentRotX) * ease;
+    currentRotY += (targetRotY - currentRotY) * ease;
+    currentNormX += (targetNormX - currentNormX) * ease;
+    currentNormY += (targetNormY - currentNormY) * ease;
+
+    const scale = isPointerActive ? 1.02 : 1;
+    stage.style.transform = `perspective(1000px) rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg) scale3d(${scale}, ${scale}, ${scale})`;
+
+    if (portraitLayer) {
+      portraitLayer.style.transform = `translate3d(${(currentNormX * 14).toFixed(1)}px, ${(currentNormY * 14).toFixed(1)}px, 15px)`;
+    }
+
+    if (glowLayer) {
+      glowLayer.style.transform = `translate(-50%, -50%) translate3d(${(-currentNormX * 8).toFixed(1)}px, ${(-currentNormY * 8).toFixed(1)}px, -20px)`;
+    }
+
+    if (chipsLayer) {
+      chipsLayer.style.transform = `translate3d(${(currentNormX * 22).toFixed(1)}px, ${(currentNormY * 22).toFixed(1)}px, 45px)`;
+    }
+
+    const delta = Math.abs(targetRotX - currentRotX) + Math.abs(targetRotY - currentRotY) + Math.abs(targetNormX - currentNormX) + Math.abs(targetNormY - currentNormY);
+    if (isPointerActive || delta > 0.01) {
+      rafId = requestAnimationFrame(updateTilt);
+    } else {
+      currentRotX = 0;
+      currentRotY = 0;
+      currentNormX = 0;
+      currentNormY = 0;
+      stage.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+      if (portraitLayer) portraitLayer.style.transform = "translate3d(0px, 0px, 15px)";
+      if (glowLayer) glowLayer.style.transform = "translate(-50%, -50%) translate3d(0px, 0px, -20px)";
+      if (chipsLayer) chipsLayer.style.transform = "translate3d(0px, 0px, 45px)";
+      rafId = null;
+    }
   }
 
   function handleMove(e) {
@@ -566,59 +635,31 @@ function initHeroTilt() {
 
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const normX = Math.max(-1, Math.min(1, (x - centerX) / (rect.width * 0.5)));
-    const normY = Math.max(-1, Math.min(1, (y - centerY) / (rect.height * 0.5)));
+    targetNormX = Math.max(-1, Math.min(1, (x - centerX) / (rect.width * 0.5)));
+    targetNormY = Math.max(-1, Math.min(1, (y - centerY) / (rect.height * 0.5)));
 
-    const rotateX = -normY * maxTilt;
-    const rotateY = normX * maxTilt;
+    targetRotX = -targetNormY * maxTilt;
+    targetRotY = targetNormX * maxTilt;
+    isPointerActive = true;
 
-    // Fast, responsive CSS transition during active movement
-    stage.style.transition = "transform 0.1s ease-out";
-    stage.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
-
-    if (portraitLayer) {
-      portraitLayer.style.transition = "transform 0.1s ease-out";
-      portraitLayer.style.transform = `translate3d(${(normX * 14).toFixed(1)}px, ${(normY * 14).toFixed(1)}px, 15px)`;
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateTilt);
     }
-
-    if (glowLayer) {
-      glowLayer.style.transition = "transform 0.1s ease-out";
-      glowLayer.style.transform = `translate(-50%, -50%) translate3d(${(-normX * 8).toFixed(1)}px, ${(-normY * 8).toFixed(1)}px, -20px)`;
-    }
-
-    if (chipsLayer) {
-      chipsLayer.style.transition = "transform 0.1s ease-out";
-      chipsLayer.style.transform = `translate3d(${(normX * 24).toFixed(1)}px, ${(normY * 24).toFixed(1)}px, 40px)`;
-    }
-
-    isHovered = true;
   }
 
   function handleLeave() {
     if (!canRunTilt()) return;
-    isHovered = false;
+    targetNormX = 0;
+    targetNormY = 0;
+    targetRotX = 0;
+    targetRotY = 0;
+    isPointerActive = false;
 
-    // Smooth ease-out reset back to resting pose
-    stage.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-    stage.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-
-    if (portraitLayer) {
-      portraitLayer.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-      portraitLayer.style.transform = "translate3d(0px, 0px, 10px)";
-    }
-
-    if (glowLayer) {
-      glowLayer.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-      glowLayer.style.transform = "translate(-50%, -50%) translate3d(0px, 0px, -20px)";
-    }
-
-    if (chipsLayer) {
-      chipsLayer.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-      chipsLayer.style.transform = "translate3d(0px, 0px, 40px)";
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateTilt);
     }
   }
 
