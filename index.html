@@ -23,7 +23,7 @@
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230C1224' stroke='%23FFB020' stroke-width='6'/%3E%3Ctext x='50' y='63' font-family='sans-serif' font-size='42' font-weight='900' fill='%23FFB020' text-anchor='middle'%3EA.%3C/text%3E%3Ccircle cx='76' cy='32' r='8' fill='%233DDC97'/%3E%3C/svg%3E" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=2026.29" />
+  <link rel="stylesheet" href="assets/css/style.css?v=2026.30" />
 
   <!-- Canvas Confetti Library for sudo hire-me & contact celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
@@ -539,31 +539,46 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
             <div class="arch-node-title">Client Browser</div>
             <div class="arch-node-sub">HTTP/2 &bull; TLS 1.3</div>
           </div>
-          <div class="arch-flow-arrow">→</div>
+          <div class="arch-flow-arrow" data-from="client" data-to="cloudflare">
+            <span class="flow-arrow-char">→</span>
+            <span class="flow-packet-dot"></span>
+          </div>
           <div class="arch-node-item" data-node="cloudflare">
             <div class="arch-node-icon">🛡️</div>
             <div class="arch-node-title">Cloudflare Edge</div>
             <div class="arch-node-sub">WAF &amp; Global CDN</div>
           </div>
-          <div class="arch-flow-arrow">→</div>
+          <div class="arch-flow-arrow" data-from="cloudflare" data-to="aws">
+            <span class="flow-arrow-char">→</span>
+            <span class="flow-packet-dot"></span>
+          </div>
           <div class="arch-node-item" data-node="aws">
             <div class="arch-node-icon">☁️</div>
             <div class="arch-node-title">AWS EC2 VPS</div>
             <div class="arch-node-sub">Ubuntu 24.04 LTS</div>
           </div>
-          <div class="arch-flow-arrow">→</div>
+          <div class="arch-flow-arrow" data-from="aws" data-to="nginx">
+            <span class="flow-arrow-char">→</span>
+            <span class="flow-packet-dot"></span>
+          </div>
           <div class="arch-node-item" data-node="nginx">
             <div class="arch-node-icon">⚡</div>
             <div class="arch-node-title">Alpine Nginx</div>
             <div class="arch-node-sub">Reverse Proxy :80/:443</div>
           </div>
-          <div class="arch-flow-arrow">→</div>
+          <div class="arch-flow-arrow" data-from="nginx" data-to="gunicorn">
+            <span class="flow-arrow-char">→</span>
+            <span class="flow-packet-dot"></span>
+          </div>
           <div class="arch-node-item" data-node="gunicorn">
             <div class="arch-node-icon">🐍</div>
             <div class="arch-node-title">Gunicorn / Flask</div>
             <div class="arch-node-sub">WSGI Gevent :8000</div>
           </div>
-          <div class="arch-flow-arrow">→</div>
+          <div class="arch-flow-arrow" data-from="gunicorn" data-to="postgres">
+            <span class="flow-arrow-char">→</span>
+            <span class="flow-packet-dot"></span>
+          </div>
           <div class="arch-node-item" data-node="postgres">
             <div class="arch-node-icon">🐘</div>
             <div class="arch-node-title">PostgreSQL 16</div>
@@ -722,11 +737,15 @@ Type <span style="color:var(--accent-primary);">'help'</span> for a list of supp
             <select class="api-url-select" id="api-endpoint-select" aria-label="Select API Endpoint">
               <option value="/api/v1/profile">/api/v1/profile — Developer & Dual Degree Identity</option>
               <option value="/api/v1/projects">/api/v1/projects — Deployed Production Applications</option>
+              <option value="/api/v1/infra/health">/api/v1/infra/health — AWS EC2 Health & System Status</option>
               <option value="/api/v1/telemetry">/api/v1/telemetry — AWS EC2 Living System Metrics</option>
               <option value="/api/v1/skills">/api/v1/skills — Backend & DevOps Stack</option>
             </select>
             <button type="button" class="btn btn-primary" id="btn-api-send" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">
               <span>Send Request ⚡</span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="btn-api-copy" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;" title="Copy JSON Response">
+              <span>📋 Copy JSON</span>
             </button>
             <span class="api-status-badge" id="api-status-pill">200 OK &middot; 18ms</span>
           </div>

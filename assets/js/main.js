@@ -171,6 +171,14 @@ function initCustomCursor() {
       ring.classList.remove("cursor-hidden");
     }
   });
+  // Card-level spotlight tracking for subtle border illumination
+  document.querySelectorAll(".bento-card, .project-case-card, .arch-inspector-card, .recruiter-modal-box, .stat-item, .recruiter-stat-card").forEach(card => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--card-x", `${(e.clientX - rect.left).toFixed(1)}px`);
+      card.style.setProperty("--card-y", `${(e.clientY - rect.top).toFixed(1)}px`);
+    });
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -431,11 +439,11 @@ function initInteractiveTerminal() {
         appendOutput(`Available commands:
   about         - View dual-degree engineering background
   projects      - List featured production applications
-  skills        - Display core technical proficiencies
-  status        - Show live AWS EC2 telemetry & uptime
+  skills / stack- Display core technical proficiencies
+  status / infra- Show live AWS EC2 telemetry & uptime
   theme <name>  - Switch theme (cyber, matrix, aurora, paper)
   neofetch      - Print Mission Control system specification
-  sudo hire-me  - Launch celebration protocol & trigger contact
+  hire / sudo hire-me - Launch celebration protocol & trigger contact
   clear         - Clear terminal output
   exit          - Close this terminal modal`, "color:var(--accent-primary);");
         break;
@@ -460,6 +468,7 @@ function initInteractiveTerminal() {
    -> https://abhishekpathak.site`);
         break;
 
+      case "stack":
       case "skills":
         appendOutput(`Technical Stack:
 - Languages: Python, Flask, JavaScript (ES6+), SQL (PostgreSQL, SQLite)
@@ -467,13 +476,15 @@ function initInteractiveTerminal() {
 - Tools: Git, GitHub Actions, Chart.js, Linux/Bash`);
         break;
 
+      case "infra":
+      case "telemetry":
       case "status":
         appendOutput(`[TELEMETRY]
 Uptime: 99.98% (180+ Days Zero OOM Kills)
 Physical Memory: 342 MB / 980 MB (35% Used)
 Swap File: 180 MB / 4096 MB (vm.swappiness=10)
 Containers: 3 Active (portfolio, tma, lms)
-CI/CD: GitHub Actions SSH rsync PASSED (Commit 979c582)`);
+CI/CD: GitHub Actions SSH rsync PASSED (Commit ee9e71a)`);
         break;
 
       case "theme":
@@ -500,8 +511,9 @@ CI/CD: GitHub Actions SSH rsync PASSED (Commit 979c582)`);
         `, "color:var(--accent-primary); font-family:var(--font-mono);");
         break;
 
+      case "hire":
       case "sudo":
-        if (arg === "hire-me" || parts.slice(1).join(" ") === "hire-me") {
+        if (command === "hire" || arg === "hire-me" || parts.slice(1).join(" ") === "hire-me") {
           appendOutput(`[ACCESS GRANTED] Initiating hiring protocol... Congratulations!`, "color:var(--accent-green); font-weight:bold;");
           if (window.confetti) {
             window.confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
@@ -2143,16 +2155,40 @@ function initShortcutsAndVim() {
 function initApiPlayground() {
   const select = document.getElementById("api-endpoint-select");
   const sendBtn = document.getElementById("btn-api-send");
+  const copyBtn = document.getElementById("btn-api-copy");
   const statusPill = document.getElementById("api-status-pill");
   const pre = document.getElementById("api-response-pre");
 
   if (!select || !sendBtn || !pre) return;
 
+  function highlightJson(json) {
+    if (typeof json !== "string") {
+      json = JSON.stringify(json, null, 2);
+    }
+    json = json.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+      let cls = "json-number";
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) {
+          cls = "json-key";
+        } else {
+          cls = "json-string";
+        }
+      } else if (/true|false/.test(match)) {
+        cls = "json-bool";
+      } else if (/null/.test(match)) {
+        cls = "json-null";
+      }
+      return '<span class="' + cls + '">' + match + "</span>";
+    });
+  }
+
   const mockEndpoints = {
     "/api/v1/profile": () => {
+      const jitter = Math.floor(Math.random() * 8) + 14;
       return {
         status: 200,
-        latency: "16ms",
+        latency: `${jitter}ms`,
         data: {
           developer: "Abhishek Pathak",
           identity: {
@@ -2162,21 +2198,24 @@ function initApiPlayground() {
             ],
             location: "Lucknow / Kushinagar, UP, India",
             email: "abhishekpathak4312@gmail.com",
-            github: "https://github.com/raj4312"
+            github: "https://github.com/24f2001885",
+            linkedin: "https://www.linkedin.com/in/abhishek-pathak-7a65a931b/"
           },
           specialization: [
-            "Multi-Tenant SaaS Isolation",
-            "Low-Footprint Cloud Architecture (AWS 1 GB RAM EC2)",
-            "GitOps Push-to-Deploy CI/CD Pipelines"
+            "Multi-Tenant Cloud Architectures",
+            "Low-Footprint Linux Tuning (AWS 1 GB RAM EC2)",
+            "Automated GitOps Push-to-Deploy CI/CD",
+            "RESTful Python/Flask Microservices"
           ],
           server_timestamp: new Date().toISOString()
         }
       };
     },
     "/api/v1/projects": () => {
+      const jitter = Math.floor(Math.random() * 10) + 18;
       return {
         status: 200,
-        latency: "22ms",
+        latency: `${jitter}ms`,
         data: {
           count: 3,
           deployments: [
@@ -2184,7 +2223,11 @@ function initApiPlayground() {
               id: "tma",
               name: "Trekking Management Application (TMA)",
               architecture: "Multi-Tenant PostgreSQL + Gunicorn + Alpine Nginx",
-              live_domains: ["tma.tenant0.abhishekpathak.site", "tma.tenant1.abhishekpathak.site", "tma.abhishekpathak.site"],
+              live_domains: [
+                "https://tma.tenant0.abhishekpathak.site",
+                "https://tma.tenant1.abhishekpathak.site",
+                "https://tma.abhishekpathak.site"
+              ],
               tenant_isolation: "Strict schema separation & subdomain middleware",
               status: "HEALTHY (Uptime 99.98%)"
             },
@@ -2192,7 +2235,7 @@ function initApiPlayground() {
               id: "lms",
               name: "Examination Management Portal (LMS/EMP)",
               architecture: "Role-based proctoring engine with Chart.js histogram analytics",
-              live_domain: "lms.abhishekpathak.site",
+              live_domain: "https://lms.abhishekpathak.site",
               status: "HEALTHY"
             },
             {
@@ -2200,17 +2243,46 @@ function initApiPlayground() {
               name: "Production VPS Living Infrastructure",
               host: "AWS Student EC2 (1 GB RAM + 4 GB Swap)",
               pipeline: "GitHub Actions automated rsync & docker-compose reload",
-              live_domain: "abhishekpathak.site",
+              live_domain: "https://abhishekpathak.site",
               status: "HEALTHY"
             }
           ]
         }
       };
     },
-    "/api/v1/telemetry": () => {
+    "/api/v1/infra/health": () => {
+      const jitter = Math.floor(Math.random() * 6) + 12;
       return {
         status: 200,
-        latency: "14ms",
+        latency: `${jitter}ms`,
+        data: {
+          system_status: "OPTIMAL // ZERO_DEGRADATION",
+          host_instance: "aws-ec2-ap-south-1.mumbai",
+          kernel: "Linux 6.8.0-1017-aws aarch64",
+          uptime_days: 182,
+          cgroup_caps: {
+            portfolio_nginx: { memory_limit: "64MB", current_usage: "14.2MB" },
+            tma_gunicorn: { memory_limit: "256MB", current_usage: "118.6MB" },
+            postgres_16: { memory_limit: "384MB", current_usage: "192.4MB" }
+          },
+          tenancy_checks: {
+            tenant_0: "CONNECTED (0.8ms)",
+            tenant_1: "CONNECTED (0.9ms)",
+            cross_leakage_audit: "PASS // STRICT_ISOLATION"
+          },
+          telemetry: {
+            physical_ram_mb: { used: 342, total: 980, percent: "34.9%" },
+            swap_file_mb: { used: 180, total: 4096, percent: "4.4%" },
+            load_avg_1m: 0.08
+          }
+        }
+      };
+    },
+    "/api/v1/telemetry": () => {
+      const jitter = Math.floor(Math.random() * 6) + 14;
+      return {
+        status: 200,
+        latency: `${jitter}ms`,
         data: {
           host: "aws-student-ec2-ap-south-1",
           kernel: "Linux 6.8.0-1017-aws aarch64",
@@ -2221,16 +2293,17 @@ function initApiPlayground() {
           ttfb_latency_ms: 24,
           gitops: {
             pipeline: "GitHub Actions",
-            last_commit: "3e04669",
+            last_commit: "ee9e71a",
             status: "PASSING"
           }
         }
       };
     },
     "/api/v1/skills": () => {
+      const jitter = Math.floor(Math.random() * 8) + 16;
       return {
         status: 200,
-        latency: "19ms",
+        latency: `${jitter}ms`,
         data: {
           languages: ["Python 3.12", "JavaScript (ES6+)", "SQL (PostgreSQL/SQLite)", "HTML5/CSS3"],
           backend_cloud: ["Docker & Compose", "AWS EC2 VPS", "Nginx Reverse Proxy", "Gunicorn WSGI", "REST APIs"],
@@ -2240,12 +2313,14 @@ function initApiPlayground() {
     }
   };
 
+  let lastRawJson = "";
+
   function executeRequest() {
     const endpoint = select.value;
     const resolver = mockEndpoints[endpoint] || mockEndpoints["/api/v1/profile"];
     const res = resolver();
 
-    pre.textContent = "// Initiating HTTP GET transmission...\n";
+    pre.innerHTML = '<span style="color:var(--text-muted);">// Handshaking TLS 1.3 & dispatching GET request...</span>\n';
     if (statusPill) {
       statusPill.textContent = "Fetching...";
       statusPill.style.color = "var(--accent-primary)";
@@ -2256,13 +2331,23 @@ function initApiPlayground() {
         statusPill.textContent = `${res.status} OK · ${res.latency}`;
         statusPill.style.color = "var(--accent-green)";
       }
-      pre.textContent = JSON.stringify(res.data, null, 2);
+      lastRawJson = JSON.stringify(res.data, null, 2);
+      pre.innerHTML = highlightJson(lastRawJson);
       playSynthesizedSound("click");
-    }, 180);
+    }, 150);
   }
 
   sendBtn.addEventListener("click", executeRequest);
   select.addEventListener("change", executeRequest);
+
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      if (lastRawJson) {
+        copyText(lastRawJson, "API JSON response copied to clipboard!");
+        playSynthesizedSound("chime");
+      }
+    });
+  }
 
   // Initial trigger
   executeRequest();
@@ -2413,92 +2498,226 @@ function initGitCommitStream() {
 
 
 /* --------------------------------------------------------------------------
-   27. Interactive Architecture Node Telemetry Inspector
+   27. Interactive Architecture Node Telemetry Inspector & Request Tracer
    -------------------------------------------------------------------------- */
 function initArchNodeInspector() {
   const container = document.getElementById("arch-nodes-list");
   const card = document.getElementById("arch-inspector-card");
   if (!container || !card) return;
 
+  const nodeOrder = ["client", "cloudflare", "aws", "nginx", "gunicorn", "postgres"];
+
   const nodeData = {
     client: {
-      name: "Client Browser (Edge)",
+      name: "Client Browser (Edge Endpoint)",
       icon: "🌐",
+      upstream: "Initial User HTTP/2 Event",
+      downstream: "Cloudflare Edge PoP (Anycast)",
+      latencyBudget: "14.2 ms (TLS / Edge RTT)",
       stats: [
         { label: "Protocol", val: "HTTP/2 &bull; TLS 1.3" },
         { label: "Edge Latency", val: "14.2 ms (Mumbai Anycast)" },
         { label: "Compression", val: "Brotli (br level 6)" },
         { label: "Security", val: "HSTS &bull; CSP Strict" }
       ],
-      desc: "User requests originate globally and terminate at the nearest Cloudflare Edge PoP via Anycast routing, minimizing initial roundtrip handshake times."
+      desc: "User requests originate globally and terminate at the nearest Cloudflare Edge PoP via Anycast routing, minimizing initial roundtrip handshake times.",
+      configSnippet: `GET /api/v1/trips HTTP/2
+Host: tma.tenant0.abhishekpathak.site
+User-Agent: Mozilla/5.0 (Client; x86_64)
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Sec-Fetch-Site: cross-site
+Sec-Fetch-Mode: cors`
     },
     cloudflare: {
       name: "Cloudflare Global CDN & WAF",
       icon: "🛡️",
+      upstream: "Client Browser (Edge)",
+      downstream: "AWS EC2 VPS (Host Origin)",
+      latencyBudget: "4.8 ms (WAF & TLS Inspection)",
       stats: [
         { label: "Caching SLA", val: "94.6% Cache Hit Ratio" },
         { label: "DDoS Mitigation", val: "Active (Zone Strict Layer 7)" },
         { label: "SSL Mode", val: "Full (Strict) Authenticated" },
         { label: "Edge TTL", val: "Static: 30d &bull; HTML: Revalidate" }
       ],
-      desc: "Buffers static CSS, JS, and font assets while shielding the single AWS EC2 origin instance from Layer 3/4 SYN floods and malicious crawler scraping."
+      desc: "Buffers static CSS, JS, and font assets while shielding the single AWS EC2 origin instance from Layer 3/4 SYN floods and malicious crawler scraping.",
+      configSnippet: `# cloudflare_ruleset.waf_custom (Terraform HCL)
+rules = [
+  {
+    action     = "block"
+    expression = "(http.request.uri.path contains '/admin' and not ip.src in $corp_ips)"
+  },
+  {
+    action     = "route"
+    expression = "(http.host matches '^tma\\..*\\.abhishekpathak\\.site$')"
+    target     = "aws-ec2-origin.abhishekpathak.site"
+    ssl_mode   = "full_strict"
+  }
+]`
     },
     aws: {
-      name: "AWS EC2 VPS (Host Instance)",
+      name: "AWS EC2 VPS (Host VPS Instance)",
       icon: "☁️",
+      upstream: "Cloudflare Global Edge",
+      downstream: "Alpine Nginx (:443 Ingress)",
+      latencyBudget: "0.3 ms (Kernel Host Routing)",
       stats: [
         { label: "Instance Type", val: "t2/t3.micro (1 vCPU, 1 GB RAM)" },
         { label: "Region", val: "ap-south-1 (Mumbai, India)" },
         { label: "Swap Paging", val: "4 GB NVMe SSD (swappiness=10)" },
         { label: "OS Kernel", val: "Ubuntu 24.04 LTS (6.8.0-aws)" }
       ],
-      desc: "Cost-optimized infrastructure host running zero-downtime containers with strict cgroup memory caps (256 MB per container) to guarantee 99.98% crash immunity."
+      desc: "Cost-optimized infrastructure host running zero-downtime containers with strict cgroup memory caps (256 MB per container) to guarantee 99.98% crash immunity.",
+      configSnippet: `# /opt/deploy/docker-compose.yml (Production Resource Caps)
+services:
+  tma_backend:
+    image: 24f2001885/tma-engine:latest
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.85'
+          memory: 256M
+        reservations:
+          memory: 128M
+    environment:
+      - DB_POOL_SIZE=15
+      - TENANT_ISOLATION_STRICT=true`
     },
     nginx: {
       name: "Alpine Nginx (Reverse Proxy & Ingress)",
       icon: "⚡",
+      upstream: "AWS EC2 VPS Ingress",
+      downstream: "Gunicorn WSGI Socket (:5001)",
+      latencyBudget: "1.2 ms (Subdomain Ingress Routing)",
       stats: [
         { label: "Listen Ports", val: "80 (Redirect 301) / 443 (SSL)" },
         { label: "Subdomain Routing", val: "tma.*.abhishekpathak.site" },
         { label: "Upstream Socket", val: "proxy_pass http://127.0.0.1:5001" },
         { label: "Proxy Buffers", val: "16 8k (zero disk buffer spill)" }
       ],
-      desc: "Dispatches incoming subdomains (e.g. tma.tenant0, lms) directly to upstream Docker microservices, setting X-Tenant-ID and real remote client headers."
+      desc: "Dispatches incoming subdomains (e.g. tma.tenant0, lms) directly to upstream Docker microservices, setting X-Tenant-ID and real remote client headers.",
+      configSnippet: `# /etc/nginx/conf.d/tma.conf (Dynamic Subdomain Ingress)
+server {
+  listen 443 ssl http2;
+  server_name ~^(?<tenant>.+)\.tma\.abhishekpathak\.site$;
+
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Tenant-ID $tenant;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass http://127.0.0.1:5001;
+    proxy_buffer_size 16k;
+  }
+}`
     },
     gunicorn: {
       name: "Gunicorn WSGI & Python Engine",
       icon: "🐍",
+      upstream: "Alpine Nginx Upstream Socket",
+      downstream: "PostgreSQL 16 Multi-Tenant Schema",
+      latencyBudget: "8.4 ms (WSGI Context & Dispatch)",
       stats: [
         { label: "Runtime", val: "Python 3.12.3 &bull; Gevent Workers" },
         { label: "Concurrency", val: "3 Active WSGI Worker Threads" },
         { label: "Middleware Hook", val: "@app.before_request g.tenant_id" },
         { label: "Memory Cap", val: "142 MB / 256 MB Limit" }
       ],
-      desc: "Resolves organization tenancy per HTTP request, injecting the dynamic schema context into Flask thread locals and managing database connection pools."
+      desc: "Resolves organization tenancy per HTTP request, injecting the dynamic schema context into Flask thread locals and managing database connection pools.",
+      configSnippet: `# app/middleware/tenant_resolver.py (Flask Dynamic Tenancy)
+@app.before_request
+def resolve_tenant_context():
+    tenant_header = request.headers.get("X-Tenant-ID", "public")
+    g.tenant = sanitize_schema_identifier(tenant_header)
+    
+    # Bind connection pool transaction strictly to tenant schema:
+    with db.engine.connect() as conn:
+        conn.execute(text(f"SET LOCAL search_path = tenant_{g.tenant}, public;"))`
     },
     postgres: {
       name: "PostgreSQL 16 (Multi-Tenant Schemas)",
       icon: "🐘",
+      upstream: "Gunicorn SQLAlchemy Pool",
+      downstream: "Zero-Leakage Result Set Output",
+      latencyBudget: "0.6 ms (Indexed Schema Query)",
       stats: [
         { label: "Schema Isolation", val: "Dedicated Schema per Organization" },
         { label: "Search Path", val: "SET LOCAL search_path = tenant_xyz" },
         { label: "Connection Pool", val: "Max 15 Shared Connections" },
         { label: "Data Integrity", val: "Composite Indexing & Strict FKs" }
       ],
-      desc: "Guarantees zero cross-tenant leakage at the database level by binding transactions to isolated schemas without the resource overhead of spinning up multiple DB containers."
+      desc: "Guarantees zero cross-tenant leakage at the database level by binding transactions to isolated schemas without the resource overhead of spinning up multiple DB containers.",
+      configSnippet: `-- PostgreSQL 16 Multi-Tenant Schema Isolation Guard
+CREATE SCHEMA IF NOT EXISTS tenant_0;
+CREATE SCHEMA IF NOT EXISTS tenant_1;
+
+-- Dynamic search_path forces query scope to tenant without table duplication:
+SET LOCAL search_path = tenant_0;
+SELECT b.id, b.trek_name, b.booking_ref, b.seats_booked
+FROM tenant_0.bookings b
+WHERE b.status = 'CONFIRMED'
+ORDER BY b.departure_date ASC LIMIT 25;`
     }
   };
+
+  function updatePipelineHops(activeKey) {
+    const activeIdx = nodeOrder.indexOf(activeKey);
+    const nodes = container.querySelectorAll(".arch-node-item");
+    const arrows = container.querySelectorAll(".arch-flow-arrow");
+
+    nodes.forEach(node => {
+      const key = node.getAttribute("data-node");
+      const idx = nodeOrder.indexOf(key);
+      node.classList.remove("active", "node-upstream", "node-downstream");
+
+      if (idx === activeIdx) {
+        node.classList.add("active");
+      } else if (idx === activeIdx - 1) {
+        node.classList.add("node-upstream");
+      } else if (idx === activeIdx + 1) {
+        node.classList.add("node-downstream");
+      }
+    });
+
+    arrows.forEach((arrow, i) => {
+      arrow.classList.remove("active-arrow");
+      if (i === activeIdx - 1 || i === activeIdx) {
+        arrow.classList.add("active-arrow");
+      }
+    });
+  }
 
   function renderInspector(nodeKey) {
     const data = nodeData[nodeKey] || nodeData.client;
     card.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-glass); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:1.4rem;">${data.icon}</span>
-          <strong style="font-family:var(--font-mono); font-size:1rem; color:var(--text-primary);">${escapeHTML(data.name)}</strong>
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.5rem;">${data.icon}</span>
+          <div>
+            <strong style="font-family:var(--font-mono); font-size:1rem; color:var(--text-primary); display:block;">${escapeHTML(data.name)}</strong>
+            <span style="font-family:var(--font-mono); font-size:0.72rem; color:var(--accent-primary);">⚡ Budget: ${escapeHTML(data.latencyBudget)}</span>
+          </div>
         </div>
-        <span class="badge" style="color:var(--accent-green); border-color:rgba(61,220,151,0.3);">ONLINE // HEALTHY</span>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <span class="badge" style="color:var(--accent-green); border-color:rgba(61,220,151,0.3);">ONLINE // HEALTHY</span>
+        </div>
       </div>
+
+      <!-- Hop Tracer Route Bar -->
+      <div class="arch-hop-route-bar" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-glass); border-radius:8px; padding:0.6rem 0.85rem; margin-bottom:1.25rem; font-family:var(--font-mono); font-size:0.75rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <div>
+          <span style="color:var(--text-muted);">Upstream:</span>
+          <span style="color:var(--accent-cyan); font-weight:600; margin-left:0.3rem;">${escapeHTML(data.upstream)}</span>
+        </div>
+        <div style="color:var(--accent-primary);">➔ Active Node ➔</div>
+        <div>
+          <span style="color:var(--text-muted);">Downstream:</span>
+          <span style="color:var(--accent-green); font-weight:600; margin-left:0.3rem;">${escapeHTML(data.downstream)}</span>
+        </div>
+      </div>
+
       <div class="arch-inspector-grid">
         ${data.stats.map(s => `
           <div class="arch-stat-block">
@@ -2507,17 +2726,40 @@ function initArchNodeInspector() {
           </div>
         `).join("")}
       </div>
+
+      <!-- Production Configuration Snippet -->
+      <div style="margin-top:1.25rem; border-top:1px solid var(--border-glass); padding-top:1rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--accent-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
+            🛠️ Real Production Configuration Snippet
+          </span>
+          <button type="button" class="btn btn-secondary copy-snippet-btn" data-snippet="${encodeURIComponent(data.configSnippet)}" style="font-size:0.72rem; padding:0.25rem 0.6rem;">
+            📋 Copy Code
+          </button>
+        </div>
+        <pre class="arch-config-pre" style="background:#040711; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.85rem; font-family:var(--font-mono); font-size:0.75rem; color:var(--text-code); line-height:1.45; overflow-x:auto; margin:0;"><code>${escapeHTML(data.configSnippet)}</code></pre>
+      </div>
+
       <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-top:1rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:0.75rem;">
         ${escapeHTML(data.desc)}
       </p>
     `;
+
+    const copyBtn = card.querySelector(".copy-snippet-btn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        const code = decodeURIComponent(copyBtn.getAttribute("data-snippet"));
+        copyText(code, "Configuration snippet copied to clipboard!");
+        playSynthesizedSound("chime");
+      });
+    }
+
+    updatePipelineHops(nodeKey);
   }
 
   const nodes = container.querySelectorAll(".arch-node-item");
   nodes.forEach(node => {
     node.addEventListener("click", () => {
-      nodes.forEach(n => n.classList.remove("active"));
-      node.classList.add("active");
       const key = node.getAttribute("data-node");
       renderInspector(key);
       playSynthesizedSound("key");
