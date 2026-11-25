@@ -128,11 +128,11 @@
       "category": "DevOps & Cloud Systems",
       "featured": true,
       "tagline": "Production multi-container edge stack deployed on a 1 GB RAM AWS EC2 VPS with zero-downtime CI/CD.",
-      "description": "Engineered high-efficiency cloud hosting powering 3 production full-stack web platforms on a constrained 1 GB RAM AWS EC2 instance. Configured 4 GB swap allocation, Alpine Nginx reverse proxy, automated Certbot SSL/TLS renewal, container memory ceilings, and GitHub Actions continuous deployment.",
+      "description": "Engineered high-efficiency cloud hosting powering 4 production full-stack web platforms (Portfolio, TMA, LMS, CodeCrew) on a constrained 1 GB RAM AWS EC2 instance. Configured 4 GB swap allocation, Alpine Nginx reverse proxy, automated Certbot SSL/TLS renewal, container memory ceilings, and GitHub Actions continuous deployment.",
       "techStack": ["AWS EC2", "Docker Compose", "Nginx", "GitHub Actions", "Let's Encrypt SSL", "Linux/Bash"],
-      "metrics": ["1 GB RAM / 4 GB Swap", "3 Live Subdomains", "Zero-Downtime GitOps"],
+      "metrics": ["1 GB RAM / 4 GB Swap", "4 Live Subdomains", "Zero-Downtime GitOps"],
       "caseStudy": {
-        "problem": "Running 3 full-stack applications with databases, reverse proxy, and SSL certificates on an AWS Student EC2 micro instance (1 GB RAM) causes frequent kernel Out-Of-Memory (OOM) crashes.",
+        "problem": "Running 4 full-stack applications with databases, reverse proxy, and SSL certificates on an AWS Student EC2 micro instance (1 GB RAM) causes frequent kernel Out-Of-Memory (OOM) crashes.",
         "architecture": "Configured 4 GB swap with low kernel swappiness (vm.swappiness=10), Alpine Nginx reverse proxy (< 15 MB RAM), Docker Compose resource limits, and an automated GitHub Actions CI/CD deployment pipeline.",
         "decisions": "Implemented SSH rsync and rolling container restarts rather than heavy Kubernetes or Swarm orchestrators, preserving 980+ MB of RAM for application workloads.",
         "results": "Zero OOM crashes over 180+ days of uptime with continuous push-to-deploy GitOps automation.",
@@ -149,6 +149,35 @@
       ],
       "githubUrl": "https://github.com/24f2001885/My_profile",
       "image": "assets/img/infra-preview.jpg"
+    },
+    {
+      "id": "codecrew",
+      "title": "CodeCrew — Dev-Squad Collective & Escrow Platform",
+      "category": "Full-Stack & Distributed Systems",
+      "featured": true,
+      "tagline": "Multi-squad engineering marketplace with milestone escrow payouts, direct squad chat, and a 3-tier confidentiality wall.",
+      "description": "An enterprise-grade collaborative platform engineered for developer squads and client engineering contracts. Features PostgreSQL-backed milestone escrow funding, squad financial wallets, direct squad representative chat, automated Playwright/Pytest test suites, and strict access grant isolation.",
+      "techStack": ["Python", "Flask", "PostgreSQL", "Docker", "Gunicorn", "Nginx", "Pytest"],
+      "metrics": ["3-Tier Trust Model", "Escrow Milestone Payouts", "35+ Pytest Suites"],
+      "caseStudy": {
+        "problem": "Dev collectives and freelance agencies struggle with client lead leakage, payment disputes, and lack of squad-level portfolio identity when using fragmented freelancing portals.",
+        "architecture": "Engineered a 3-tier confidentiality wall separating super-admin lead pipelines from coders and visitors. Configured transactional PostgreSQL milestone escrow with squad wallet balances, real-time SSE live polling, and automated Dockerized deployment on codecrew.abhishekpathak.site via Nginx proxy on Port 5003.",
+        "decisions": "Adopted role-scoped access grants where super-admins delegate project visibility to squads strictly on a need-to-know basis. Tuned Gunicorn workers (-w 2 --threads 2) to maintain a minimal 220 MB RAM footprint on AWS EC2.",
+        "results": "Achieved zero cross-squad data leakage, 100% test pass rate across 35 unit/integration test suites, and sub-25ms response latency.",
+        "improvements": "Incorporate WebSocket bi-directional streaming via Redis Pub/Sub for cross-squad live code pairing and automated crypto escrow settlements."
+      },
+      "architectureHighlights": [
+        "Strict 3-Tier Confidentiality Wall & Role-Scoped Access Grants (Admin, Squad, Coder)",
+        "Transactional Milestone-Based Escrow Payouts & Squad Financial Wallets",
+        "Sprint Delivery Tracker, Squad Room Chat & Real-Time Discussion Live Polling",
+        "Dockerized production container running on Port 5003 behind Alpine Nginx reverse proxy"
+      ],
+      "liveUrls": [
+        { "label": "Dedicated Project Page", "url": "codecrew.html" },
+        { "label": "CodeCrew Live Platform", "url": "https://codecrew.abhishekpathak.site" }
+      ],
+      "githubUrl": "https://github.com/24f2001885/codecrew",
+      "image": "assets/img/codecrew-preview.jpg"
     }
   ],
   "skills": {

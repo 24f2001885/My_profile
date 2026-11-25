@@ -465,7 +465,11 @@ function initInteractiveTerminal() {
 2. Examination Management Portal (LMS) [UNDER DEVELOPMENT]: Proctored MCQ engine & Chart.js analytics
    -> https://lms.abhishekpathak.site (Active Development)
 3. Cloud & GitOps Infrastructure: AWS EC2 1GB RAM / 4GB Swap + GitHub Actions
-   -> https://abhishekpathak.site`);
+   -> https://abhishekpathak.site
+4. CodeCrew: Dev-Squad Collective & Milestone Escrow Platform
+   -> Dedicated Showcase: codecrew.html
+   -> Live Platform: https://codecrew.abhishekpathak.site (Port 5003)
+   -> GitHub: https://github.com/24f2001885/codecrew (Agent Push-to-Deploy)`);
         break;
 
       case "stack":
@@ -483,7 +487,7 @@ function initInteractiveTerminal() {
 Uptime: 99.98% (180+ Days Zero OOM Kills)
 Physical Memory: 342 MB / 980 MB (35% Used)
 Swap File: 180 MB / 4096 MB (vm.swappiness=10)
-Containers: 3 Active (portfolio, tma, lms)
+Containers: 4 Active (portfolio, tma, lms, codecrew)
 CI/CD: GitHub Actions SSH rsync PASSED (Commit ee9e71a)`);
         break;
 
@@ -904,9 +908,15 @@ function renderProjects(projects) {
                 </a>
               ` : ""}
 
-              <button class="btn btn-secondary case-study-trigger" data-project-id="${escapeHTML(proj.id)}" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
-                📖 Case Study
-              </button>
+              ${proj.id === "codecrew" ? `
+                <a href="codecrew.html" class="btn btn-secondary" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
+                  📖 Deep Dive Case Study ↗
+                </a>
+              ` : `
+                <button class="btn btn-secondary case-study-trigger" data-project-id="${escapeHTML(proj.id)}" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
+                  📖 Case Study
+                </button>
+              `}
             </div>
           </div>
 
@@ -1023,6 +1033,31 @@ function renderArchitectureSVG(projectId) {
 
         <circle r="4" fill="#3DDC97">
           <animateMotion path="M 60 30 L 500 30" dur="3.5s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+    `;
+  } else if (projectId === "codecrew") {
+    return `
+      <svg class="arch-svg-diagram" viewBox="0 0 600 60">
+        <line x1="40" y1="30" x2="560" y2="30" stroke="rgba(56,189,248,0.3)" stroke-width="2" stroke-dasharray="4 4" />
+        <circle cx="60" cy="30" r="14" fill="#0C1224" stroke="#38BDF8" stroke-width="2" />
+        <text x="60" y="34" font-family="monospace" font-size="8" fill="#38BDF8" text-anchor="middle">Squad</text>
+        
+        <circle cx="180" cy="30" r="14" fill="#0C1224" stroke="#4F7CFF" stroke-width="2" />
+        <text x="180" y="34" font-family="monospace" font-size="8" fill="#4F7CFF" text-anchor="middle">Nginx</text>
+
+        <circle cx="300" cy="30" r="14" fill="#0C1224" stroke="#F1B24B" stroke-width="2" />
+        <text x="300" y="34" font-family="monospace" font-size="8" fill="#F1B24B" text-anchor="middle">Flask:5003</text>
+
+        <circle cx="420" cy="30" r="14" fill="#0C1224" stroke="#A0F669" stroke-width="2" />
+        <text x="420" y="34" font-family="monospace" font-size="8" fill="#A0F669" text-anchor="middle">Escrow</text>
+
+        <circle cx="540" cy="30" r="14" fill="#0C1224" stroke="#C084FC" stroke-width="2" />
+        <text x="540" y="34" font-family="monospace" font-size="8" fill="#C084FC" text-anchor="middle">Postgres</text>
+
+        <!-- Travelling Packet -->
+        <circle r="4" fill="#A0F669">
+          <animateMotion path="M 60 30 L 540 30" dur="3.8s" repeatCount="indefinite" />
         </circle>
       </svg>
     `;
@@ -1286,6 +1321,48 @@ http {
         index index.html;
     }
 }`
+    },
+    codecrew: {
+      "escrow_ledger.py": `# CodeCrew Transactional Milestone Escrow Release
+def release_milestone_payment(project_request_id, milestone_id):
+    milestone = db.session.get(ProjectMilestone, milestone_id)
+    if not milestone or milestone.escrow_status != "funded":
+        raise ValueError("Milestone must be funded in escrow before payout.")
+
+    payment = ProjectPayment(
+        project_request_id=project_request_id,
+        group_id=milestone.project_request.assigned_group_id,
+        milestone_id=milestone.id,
+        amount=milestone.escrow_amount,
+        status="released",
+        transaction_reference=f"ESC-REL-{milestone.id[:8].upper()}"
+    )
+    milestone.escrow_status = "released"
+    milestone.status = "completed"
+    db.session.add(payment)
+    db.session.commit()
+    return {"status": "success", "reference": payment.transaction_reference}`,
+      "negotiation_hub.py": `# CodeCrew Multi-Squad Offer Acceptance & Lead Shield
+@bp.route("/offers/<offer_id>/accept", methods=["POST"])
+def accept_squad_offer(req_id, offer_id):
+    req = ProjectRequest.query.get_or_404(req_id)
+    offer = SquadOffer.query.get_or_404(offer_id)
+    req.assigned_group_id = offer.group_id
+    req.contracted_budget = offer.proposed_budget
+    req.status = "assigned"
+    # Auto-archive competing squad bids for strict confidentiality
+    SquadOffer.query.filter(SquadOffer.project_request_id == req_id, SquadOffer.id != offer_id).update({"status": "declined"})
+    db.session.commit()
+    return jsonify({"status": "contract_bound", "squad_id": offer.group_id})`,
+      "docker-compose.prod.yml": `services:
+  codecrew-app:
+    image: codecrew-web:latest
+    restart: unless-stopped
+    mem_limit: 180m
+    environment:
+      - DATABASE_URL=postgresql://codecrews:\${DB_PASS}@db:5432/codecrews
+    ports:
+      - "5003:5000"`
     }
   };
 
@@ -2247,7 +2324,7 @@ function initApiPlayground() {
         status: 200,
         latency: `${jitter}ms`,
         data: {
-          count: 3,
+          count: 4,
           deployments: [
             {
               id: "tma",
@@ -2275,6 +2352,15 @@ function initApiPlayground() {
               pipeline: "GitHub Actions automated rsync & docker-compose reload",
               live_domain: "https://abhishekpathak.site",
               status: "HEALTHY"
+            },
+            {
+              id: "codecrew",
+              name: "CodeCrew — Dev-Squad Collective & Escrow Platform",
+              architecture: "PostgreSQL 16 Escrow Ledger + Multi-Squad Rooms + Docker Gunicorn",
+              live_domain: "https://codecrew.abhishekpathak.site",
+              project_page: "codecrew.html",
+              github_repo: "https://github.com/24f2001885/codecrew",
+              status: "ACTIVE DEVELOPMENT (Continuous Agent GitOps Deployment)"
             }
           ]
         }
@@ -2422,7 +2508,17 @@ function initSqlSandbox() {
       rows: [
         ["tma-tenant-proxy", "nginx:1.26-alpine", "28.4 MB", "128 MB", "HEALTHY (0 restarts)"],
         ["emp-eval-engine", "python:3.12-alpine", "142.1 MB", "256 MB", "HEALTHY (0 restarts)"],
-        ["postgres-multi-tenant", "postgres:16-alpine", "118.6 MB", "384 MB", "HEALTHY (0 restarts)"]
+        ["postgres-multi-tenant", "postgres:16-alpine", "118.6 MB", "384 MB", "HEALTHY (0 restarts)"],
+        ["codecrew-web-app", "python:3.12-slim", "168.2 MB", "220 MB", "HEALTHY (0 restarts)"]
+      ]
+    },
+    "4": {
+      sql: "SELECT squad_name, escrow_locked_usd, ready_payout_usd, completed_milestones, trust_rating FROM codecrew_squads ORDER BY escrow_locked_usd DESC;",
+      headers: ["squad_name", "escrow_locked_usd", "ready_payout_usd", "completed_milestones", "trust_rating"],
+      rows: [
+        ["NexusCore Collective", "$18,500.00", "$4,200.00", "14 / 15", "4.95 / 5.0 (VERIFIED)"],
+        ["AeroAI Intelligence", "$12,400.00", "$2,100.00", "8 / 9", "4.88 / 5.0 (VERIFIED)"],
+        ["CyberShield Ops", "$9,800.00", "$3,500.00", "19 / 19", "5.00 / 5.0 (VERIFIED)"]
       ]
     }
   };
@@ -2432,6 +2528,7 @@ function initSqlSandbox() {
     let match = presets["1"];
     if (rawSql.includes("student_id") || rawSql.includes("lms")) match = presets["2"];
     else if (rawSql.includes("container") || rawSql.includes("docker")) match = presets["3"];
+    else if (rawSql.includes("squad") || rawSql.includes("codecrew") || rawSql.includes("escrow")) match = presets["4"];
 
     if (statusEl) {
       statusEl.textContent = `Query OK: ${match.rows.length} rows returned in ${(Math.random() * 1.5 + 0.8).toFixed(1)}ms`;
