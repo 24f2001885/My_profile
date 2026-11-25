@@ -96,6 +96,8 @@
       "id": "lms",
       "title": "Examination Management Portal (LMS / EMP)",
       "category": "Backend & Automated Testing",
+      "status": "UNDER DEVELOPMENT",
+      "statusBadge": "UNDER DEVELOPMENT",
       "featured": true,
       "tagline": "Role-based proctored academic assessment portal with interactive Chart.js analytics and Playwright test suite.",
       "description": "A full-stack academic evaluation system engineered with strict role-based access control (Admin, Examiner, Student). Supports timed proctored examinations, automated grading engines, Playwright E2E verification, and responsive student score distribution analytics.",

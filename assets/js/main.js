@@ -462,8 +462,8 @@ function initInteractiveTerminal() {
    -> Platform Portal: https://tma.abhishekpathak.site
    -> Tenant 0 (Himalayas): https://tma.tenant0.abhishekpathak.site
    -> Tenant 1 (Western Ghats): https://tma.tenant1.abhishekpathak.site
-2. Examination Management Portal (LMS): Proctored MCQ engine & Chart.js analytics
-   -> https://lms.abhishekpathak.site
+2. Examination Management Portal (LMS) [UNDER DEVELOPMENT]: Proctored MCQ engine & Chart.js analytics
+   -> https://lms.abhishekpathak.site (Active Development)
 3. Cloud & GitOps Infrastructure: AWS EC2 1GB RAM / 4GB Swap + GitHub Actions
    -> https://abhishekpathak.site`);
         break;
@@ -827,6 +827,7 @@ function renderProjects(projects) {
 
   container.innerHTML = projects.map(proj => {
     const isTMA = proj.id === "tma";
+    const isLMS = proj.id === "lms" || proj.status === "UNDER DEVELOPMENT";
     const tenantSwitcherMarkup = isTMA ? `
       <div class="tenant-switcher-bar" id="tma-tenant-bar">
         <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); margin-right:0.3rem;">Switch Subdomain:</span>
@@ -846,10 +847,24 @@ function renderProjects(projects) {
           
           <!-- Left: Information & Actions -->
           <div>
-            <span class="project-badge-pill">${escapeHTML(proj.category)}</span>
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+              <span class="project-badge-pill">${escapeHTML(proj.category)}</span>
+              ${isLMS ? `
+                <span class="badge" style="color:var(--accent-primary); border-color:rgba(255,176,32,0.45); background:rgba(255,176,32,0.12); font-size:0.7rem; font-weight:700; letter-spacing:0.04em; padding:0.25rem 0.65rem; border-radius:999px; display:inline-flex; align-items:center; gap:0.35rem;">
+                  <span>🚧</span>
+                  <span>UNDER DEVELOPMENT</span>
+                </span>
+              ` : ""}
+            </div>
             <h3 class="project-card-title">${escapeHTML(proj.title)}</h3>
             <p class="project-card-tagline">${escapeHTML(proj.tagline)}</p>
             <p class="project-card-desc">${escapeHTML(proj.description)}</p>
+
+            ${isLMS ? `
+              <div class="under-dev-banner" style="margin:0.5rem 0 1rem; font-family:var(--font-mono); font-size:0.76rem; color:var(--accent-primary); background:rgba(255,176,32,0.06); border:1px dashed rgba(255,176,32,0.35); padding:0.45rem 0.75rem; border-radius:8px; display:flex; align-items:center; gap:0.4rem;">
+                <span>⚠️ Note: Examination Portal is currently under active development (Core MCQ Engine complete; automated viva & reporting modules in progress).</span>
+              </div>
+            ` : ""}
 
             ${proj.metrics ? `
               <div class="project-metrics-row">
@@ -878,7 +893,7 @@ function renderProjects(projects) {
               ` : (proj.liveUrls ? proj.liveUrls.map(l => `
                 <a href="${escapeHTML(l.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:0.82rem; padding:0.48rem 0.95rem;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                  ${escapeHTML(l.label)}
+                  ${escapeHTML(l.label)}${isLMS ? " (Dev Preview)" : ""}
                 </a>
               `).join("") : "")}
 
@@ -905,6 +920,7 @@ function renderProjects(projects) {
                   <span class="mockup-dot g"></span>
                 </div>
                 <div class="mockup-url-bar">${escapeHTML(isTMA ? 'https://tma.tenant0.abhishekpathak.site' : (proj.liveUrls && proj.liveUrls.length ? proj.liveUrls[0].url : 'https://abhishekpathak.site'))}</div>
+                ${isLMS ? '<span class="badge" style="font-size:0.65rem; color:var(--accent-primary); border-color:rgba(255,176,32,0.4); background:rgba(255,176,32,0.15); margin-left:auto; font-weight:700;">DEV IN PROGRESS</span>' : ''}
               </div>
               <div class="mockup-body">
                 <img src="${escapeHTML(proj.image || 'assets/img/infra-preview.jpg')}" alt="${escapeHTML(proj.title)}" class="mockup-screenshot" loading="lazy" />
@@ -1048,15 +1064,29 @@ function openCaseStudyModal(projectId) {
   if (!proj) return;
 
   const cs = proj.caseStudy || {};
+  const isDev = proj.status === "UNDER DEVELOPMENT" || proj.id === "lms";
 
   content.innerHTML = `
-    <span class="project-badge-pill">${escapeHTML(proj.category)}</span>
+    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+      <span class="project-badge-pill">${escapeHTML(proj.category)}</span>
+      ${isDev ? `
+        <span class="badge" style="color:var(--accent-primary); border-color:rgba(255,176,32,0.45); background:rgba(255,176,32,0.12); font-size:0.7rem; font-weight:700; letter-spacing:0.04em; padding:0.25rem 0.65rem; border-radius:999px; display:inline-flex; align-items:center; gap:0.35rem;">
+          <span>🚧</span>
+          <span>UNDER DEVELOPMENT</span>
+        </span>
+      ` : ""}
+    </div>
     <h2 style="font-family:var(--font-display); font-size:2rem; margin:0.5rem 0 0.8rem; color:var(--text-primary);">
       ${escapeHTML(proj.title)} — Engineering Case Study
     </h2>
-    <p style="font-size:1.05rem; color:var(--accent-cyan); margin-bottom:2rem;">
+    <p style="font-size:1.05rem; color:var(--accent-cyan); margin-bottom:${isDev ? '1rem' : '2rem'};">
       ${escapeHTML(proj.tagline)}
     </p>
+    ${isDev ? `
+      <div class="under-dev-banner" style="margin:0 0 1.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--accent-primary); background:rgba(255,176,32,0.06); border:1px dashed rgba(255,176,32,0.35); padding:0.5rem 0.85rem; border-radius:8px; display:flex; align-items:center; gap:0.4rem;">
+        <span>⚠️ Note: Examination Portal is currently under active development (Core MCQ Engine complete; automated viva & reporting modules in progress).</span>
+      </div>
+    ` : ""}
 
     <div style="display:flex; flex-direction:column; gap:1.75rem;">
       <div style="background:var(--bg-surface-elevated); padding:1.5rem; border-radius:14px; border:1px solid var(--border-glass);">
@@ -2236,7 +2266,7 @@ function initApiPlayground() {
               name: "Examination Management Portal (LMS/EMP)",
               architecture: "Role-based proctoring engine with Chart.js histogram analytics",
               live_domain: "https://lms.abhishekpathak.site",
-              status: "HEALTHY"
+              status: "UNDER DEVELOPMENT (Core Complete, Viva Engine In Progress)"
             },
             {
               id: "infra",
